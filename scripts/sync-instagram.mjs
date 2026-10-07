@@ -26,8 +26,13 @@ const DATA_FILE = path.join(ROOT, 'data/instagram.json');
 const IMG_DIR = 'assets/img/ig';
 const STATS_EVERY_DAYS = 7;
 const STATS_LATEST = 24;
-const args = new Set(process.argv.slice(2));
+const ROTATION_SIZE = 16;               // posts re-checked per run; every post about once a day
+const RUN_EVERY_MS = 3 * 3600e3;        // matches the workflow's 3-hour schedule
+const REMOVE_AFTER_MS = 6 * 3600e3;     // a post must be gone on two checks this far apart
+const argv = process.argv.slice(2);
+const args = new Set(argv);
 const REFRESH_ALL = args.has('--refresh-all');
+const PROBE = args.has('--probe') ? (argv[argv.indexOf('--probe') + 1] || '').split(',').filter(Boolean) : null;
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -236,6 +241,22 @@ async function likesFromEmbed(code) {
   return m ? parseCount(m[1]) : null;
 }
 
+/* Is a post still public? The post embed carries contextJSON with its shortcode
+ * when it is; a removed post gets Instagram's "may have been removed" page.
+ * Anything else (errors, a changed layout) is "unknown" and never deletes. */
+async function postStatus(code) {
+  const html = await embedGet(`https://www.instagram.com/p/${code}/embed/captioned/`);
+  const raw = html.match(/"contextJSON":"((?:[^"\\]|\\.)*)"/)?.[1];
+  let ctx = null;
+  try { ctx = raw ? JSON.parse(JSON.parse(`"${raw}"`)).context : null; } catch { /* unreadable */ }
+  if (ctx?.shortcode === code) {
+    const m = html.match(/([\d,]+) likes?\b/);
+    return { state: 'live', likes: m ? parseCount(m[1]) : null };
+  }
+  if (/may have been removed|link to this photo or video may be broken/i.test(html)) return { state: 'gone' };
+  return { state: 'unknown' };
+}
+
 function fromEmbed(sm) {
   const caption = sm.edge_media_to_caption?.edges?.[0]?.node?.text || '';
   const type = sm.__typename === 'GraphSidecar' ? 'carousel'
@@ -278,23 +299,43 @@ async function syncViaEmbed(db, known, statsDue) {
     added++;
     log(`  + ${record.code} ${record.type} ${record.takenAt.slice(0, 10)} [${record.auto.category}] ${record.auto.title}`);
   }
-  if (statsDue) {
-    const listed = new Set(media.map((m) => m.shortcode));
-    const recent = [...known.values()].sort((a, b) => b.takenAt.localeCompare(a.takenAt))
-      .filter((p) => !listed.has(p.code)).slice(0, STATS_LATEST);
-    log(`Refreshing likes on ${recent.length} older posts…`);
-    for (const p of recent) {
-      try {
-        const likes = await likesFromEmbed(p.code);
-        if (likes != null) known.set(p.code, { ...p, likes });
-      } catch (e) {
-        if (e instanceof Blocked) throw e;
-        console.warn(`  ! ${p.code}: ${e.message}`);
-      }
-      await sleep(1200);
+  // Rotating check: a slice of the archive every run, so each post is looked at
+  // about once a day. Refreshes likes, and removes posts deleted on Instagram.
+  const removed = [];
+  const listed = new Set(media.map((m) => m.shortcode));
+  const codes = [...known.keys()].filter((c) => !listed.has(c)).sort();
+  const slots = Math.max(1, Math.ceil(codes.length / ROTATION_SIZE));
+  const slot = Math.floor(Date.now() / RUN_EVERY_MS) % slots;
+  const batch = codes.slice(slot * ROTATION_SIZE, (slot + 1) * ROTATION_SIZE);
+  log(`Checking ${batch.length} older posts (batch ${slot + 1}/${slots})…`);
+  for (const code of batch) {
+    const p = known.get(code);
+    let st;
+    try { st = await postStatus(code); } catch (e) {
+      if (e instanceof Blocked) throw e;
+      console.warn(`  ! ${code}: ${e.message}`);
+      continue;
     }
+    if (st.state === 'live') {
+      const next = { ...p };
+      delete next.missingSince;
+      const moved = st.likes != null && p.likes != null && Math.abs(st.likes - p.likes) >= Math.max(5, p.likes * 0.01);
+      if (moved || (st.likes != null && p.likes == null)) next.likes = st.likes;
+      known.set(code, next);
+    } else if (st.state === 'gone') {
+      if (!p.missingSince) {
+        known.set(code, { ...p, missingSince: new Date().toISOString() });
+        log(`  ? ${code} looks deleted; will remove if it's still gone next time`);
+      } else if (Date.now() - Date.parse(p.missingSince) >= REMOVE_AFTER_MS) {
+        known.delete(code);
+        await rm(path.join(ROOT, IMG_DIR, code), { recursive: true, force: true });
+        removed.push(code);
+        log(`  - ${code} removed (deleted on Instagram)`);
+      }
+    }
+    await sleep(1200);
   }
-  return { added, removed: [], profile };
+  return { added, removed, profile };
 }
 
 /* ── Turning a media object into our record ──────────────────────────── */
@@ -439,6 +480,10 @@ async function syncViaProfile(known, statsDue) {
 
 /* ── Main ────────────────────────────────────────────────────────────── */
 async function main() {
+  if (PROBE) {
+    for (const code of PROBE) log(`${code}: ${JSON.stringify(await postStatus(code))}`);
+    return;
+  }
   const db = existsSync(DATA_FILE)
     ? JSON.parse(await readFile(DATA_FILE, 'utf8'))
     : { username: USERNAME, profile: {}, statsUpdatedAt: null, posts: [] };

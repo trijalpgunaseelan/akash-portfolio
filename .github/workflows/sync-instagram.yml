@@ -1,7 +1,11 @@
-# Keeps the portfolio in step with @akshthetics.jpg on Instagram.
-# Runs every 3 hours (at :17, off GitHub's busy top-of-the-hour slots, since
-# GitHub sometimes delays or skips scheduled runs). New posts, likes and
-# deletions are committed straight to main; Vercel redeploys from main.
+# Keeps the portfolio in step with @akshthetics.jpg on Instagram, with nobody's
+# computer involved. Every 3 hours (at :17, off GitHub's busy top-of-the-hour
+# slots, since GitHub sometimes delays or skips scheduled runs) it:
+#   - adds new posts (photos downloaded into the repo)
+#   - re-checks a slice of older posts: refreshes likes, removes deleted posts
+#   - commits to main, and Vercel redeploys the site from main
+# GitHub turns off schedules in public repos after 60 days without activity,
+# so a quiet stretch gets a small heartbeat commit to keep this running.
 name: Sync Instagram
 
 on:
@@ -13,6 +17,10 @@ on:
         description: "Re-read every post (likes, captions, images)"
         type: boolean
         default: false
+      probe:
+        description: "Diagnostics only: comma-separated post codes to check, nothing is changed"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -26,34 +34,52 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
         with:
-          node-version: 22
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
           cache: npm
           cache-dependency-path: scripts/package-lock.json
 
       - name: Install
         run: npm ci --prefix scripts --no-audit --no-fund
 
+      - name: Check posts (diagnostics)
+        if: inputs.probe != ''
+        run: node scripts/sync-instagram.mjs --probe "${{ inputs.probe }}"
+
       - name: Pull posts from Instagram
+        if: inputs.probe == ''
         id: sync
         run: node scripts/sync-instagram.mjs ${{ inputs.refresh_all && '--refresh-all' || '' }}
 
       - name: Commit changes
-        if: steps.sync.outputs.changed == 'true'
+        if: inputs.probe == ''
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/instagram.json assets/img/ig
-          if git diff --cached --quiet; then exit 0; fi
           added="${{ steps.sync.outputs.added }}"
           removed="${{ steps.sync.outputs.removed }}"
-          if [ "$added" != "0" ] || [ "$removed" != "0" ]; then
-            msg="Instagram: ${added} new, ${removed} removed"
+          if ! git diff --cached --quiet; then
+            if [ "$added" != "0" ] || [ "$removed" != "0" ]; then
+              msg="Instagram: ${added} new, ${removed} removed"
+            else
+              msg="Instagram: refresh likes and counts"
+            fi
+          elif [ $(( $(date +%s) - $(git log -1 --format=%ct) )) -gt $(( 45 * 86400 )) ]; then
+            date -u +%Y-%m-%dT%H:%M:%SZ > .github/heartbeat
+            git add .github/heartbeat
+            msg="Keep the Instagram sync schedule alive"
           else
-            msg="Instagram: refresh likes and counts"
+            exit 0
           fi
           git commit -m "$msg"
-          git push
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 10
+          done
+          exit 1

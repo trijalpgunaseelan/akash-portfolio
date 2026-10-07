@@ -42,8 +42,11 @@ python3 -m http.server 8000
 It reads Akash's public profile with no login or token, and then:
 
 - adds new posts: every carousel image is downloaded to `assets/img/ig/<code>/` and the details go into `data/instagram.json`
-- refreshes like counts weekly
-- removes posts he deletes
+- re-checks a slice of older posts each run (every post about once a day): refreshes likes, and
+  **removes posts he deleted** once they're gone on two checks at least 6 hours apart
+- keeps itself alive: GitHub stops schedules after 60 quiet days, so a long gap gets a tiny heartbeat commit
+
+It all runs on GitHub's servers. No one's computer needs to be on.
 
 Changes are committed to `main`, so a host that deploys from `main` (Netlify, Vercel, GitHub Pages) updates on its own.
 To sync right now: GitHub → **Actions → Sync Instagram → Run workflow**, or locally:
@@ -65,8 +68,9 @@ New posts get an automatic category and title. To polish one, add it to **`data/
 (`personal` hides it). `featured: true` puts it first in the archive. The same file holds the
 "Stars in frame" names and the credits that aren't on Instagram.
 
-If Instagram ever blocks the sync, the workflow fails (GitHub emails the repo owner) and the site
-keeps showing the last good data.
+If Instagram ever blocks the sync or changes its pages, the workflow fails (GitHub emails the repo
+owner) and the site keeps showing the last good data. To check a post from GitHub's side, run the
+workflow with **probe** set to post codes; it reports live/gone and changes nothing.
 
 ## Contact & the one-click brief
 
