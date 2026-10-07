@@ -73,19 +73,15 @@ Contact details: WhatsApp **+91 89393 31561**, email **ashthetics.jpg@gmail.com*
 (`CONTACT` in `js/main.js` and the contact section of `index.html`).
 
 The shoot-brief form has one button: **Send to Akash**. The visitor presses it, and
-`api/send-brief.js` (a Vercel serverless function) delivers the brief to Akash's WhatsApp through
-[CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/), a free gateway that sends
-WhatsApp messages to your own number. The message includes the visitor's number and a one-tap reply link.
+`api/send-brief.js` (a Vercel serverless function) sends the brief to Akash's WhatsApp through
+**Meta's official WhatsApp Cloud API**. The message includes the visitor's details and a *Reply on WhatsApp* button.
+[CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/) works as a backup sender if `CALLMEBOT_APIKEY` is set.
 
-**One-time setup:**
+**Setup:** follow **[docs/whatsapp-setup.md](docs/whatsapp-setup.md)**. It covers a Meta app with a free test
+number, a permanent token, and the `shoot_enquiry` template (`scripts/whatsapp-setup.mjs` creates and tests it).
+Vercel needs `WHATSAPP_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID`.
 
-1. On Akash's phone (+91 89393 31561), save CallMeBot's number from
-   [callmebot.com](https://www.callmebot.com/blog/free-api-whatsapp-messages/) and send it on WhatsApp:
-   `I allow callmebot to send me messages`. It replies with an **API key**.
-2. Vercel → project **akash-portfolio** → Settings → Environment Variables → add
-   `CALLMEBOT_APIKEY` = that key (Production) → redeploy.
-
-Until the key is set, or if CallMeBot is ever down, the button falls back to opening WhatsApp with the
+Until that's done, or if delivery ever fails, the button falls back to opening WhatsApp with the
 brief typed out, so no enquiry is lost. Spam guards: a hidden honeypot field, a minimum fill time,
 input limits, and 3 briefs per 10 minutes per visitor. "Open WhatsApp", "Copy & DM on Instagram" and
 "Email" remain as small alternative links.
