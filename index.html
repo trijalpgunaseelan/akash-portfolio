@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Akash M: Photographer, Videographer &amp; Content Creator, Chennai</title>
-  <meta name="description" content="Akash M (akshthetics.jpg) is a Chennai photographer, videographer and content creator shooting concerts, audio launches and celebrity events. Ilaiyaraaja, Yuvan Shankar Raja, Chinmayi, Thalapathy Vijay and more.">
+  <meta name="description" content="Akash M (akshthetics.jpg) is a Chennai photographer, videographer and content creator shooting concerts, audio launches and celebrity events: Ilaiyaraaja, Thalapathy Vijay, Yash, Hip Hop Tamizha, Chinmayi and more.">
   <meta name="theme-color" content="#0A0A0C">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Akash M: Photographer · Videographer · Content Creator">
@@ -17,8 +17,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="preload" as="image" href="assets/img/work/ilaiyaraaja/01.webp">
+  <link rel="preload" as="fetch" href="data/instagram.json" crossorigin>
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Person","name":"Akash M","alternateName":"akshthetics.jpg","jobTitle":"Photographer, Videographer & Content Creator","address":{"@type":"PostalAddress","addressLocality":"Chennai","addressRegion":"Tamil Nadu","addressCountry":"IN"},"sameAs":["https://www.instagram.com/akshthetics.jpg/","https://www.behance.net/akashm65","https://www.threads.com/@akshthetics.jpg"]}
+  {"@context":"https://schema.org","@type":"Person","name":"Akash M","alternateName":"akshthetics.jpg","jobTitle":"Photographer, Videographer & Content Creator","email":"mailto:ashthetics.jpg@gmail.com","telephone":"+91-89393-31561","address":{"@type":"PostalAddress","addressLocality":"Chennai","addressRegion":"Tamil Nadu","addressCountry":"IN"},"sameAs":["https://www.instagram.com/akshthetics.jpg/","https://www.behance.net/akashm65","https://www.threads.com/@akshthetics.jpg"]}
   </script>
   <script>document.documentElement.classList.add('js')</script>
 </head>
@@ -30,9 +31,10 @@
   <a class="brand" href="#top" aria-label="akshthetics.jpg, back to top">akshthetics<span>.jpg</span></a>
   <nav class="nav-links" aria-label="Primary">
     <a href="#work">Work</a>
-    <a href="#reels">Reels</a>
-    <a href="#services">Services</a>
+    <a href="#latest">Latest</a>
+    <a href="#archive">Archive</a>
     <a href="#about">About</a>
+    <a href="#creator">Creator</a>
     <a href="#credits">Credits</a>
   </nav>
   <a class="btn btn-sm btn-orange nav-cta" href="#contact">Book a shoot</a>
@@ -44,13 +46,13 @@
 <div class="mobile-menu" id="mobile-menu" hidden>
   <nav aria-label="Mobile">
     <a href="#work"><small>01</small>Work</a>
-    <a href="#reels"><small>02</small>Reels</a>
-    <a href="#services"><small>03</small>Services</a>
-    <a href="#about"><small>04</small>About</a>
-    <a href="#credits"><small>05</small>Credits</a>
-    <a href="#contact"><small>06</small>Contact</a>
+    <a href="#latest"><small>02</small>Latest</a>
+    <a href="#archive"><small>03</small>Archive</a>
+    <a href="#about"><small>05</small>About</a>
+    <a href="#credits"><small>07</small>Credits</a>
+    <a href="#contact"><small>08</small>Book a shoot</a>
   </nav>
-  <p class="mm-foot">@akshthetics.jpg · Chennai, IN</p>
+  <p class="mm-foot">@akshthetics.jpg · +91 89393 31561</p>
 </div>
 
 <main id="top">
@@ -106,33 +108,27 @@
   </div>
 </section>
 
-<!-- ───────────── Stars marquee ───────────── -->
+<!-- ───────────── Stars marquee + stats ───────────── -->
 <section class="stars" aria-label="Stars in frame">
   <p class="eyebrow wrap">Stars in frame</p>
-  <div class="marquee">
-    <div class="marquee-track">
-      <span>Ilaiyaraaja</span><span>Thalapathy Vijay</span><span>Yuvan Shankar Raja</span><span>Samantha Ruth Prabhu</span><span>Nayanthara</span><span>Chinmayi</span><span>Nani</span>
-      <span aria-hidden="true">Ilaiyaraaja</span><span aria-hidden="true">Thalapathy Vijay</span><span aria-hidden="true">Yuvan Shankar Raja</span><span aria-hidden="true">Samantha Ruth Prabhu</span><span aria-hidden="true">Nayanthara</span><span aria-hidden="true">Chinmayi</span><span aria-hidden="true">Nani</span>
-    </div>
-  </div>
-  <div class="marquee marquee-rev outline">
-    <div class="marquee-track">
-      <span>Karthi</span><span>Soori</span><span>Hip Hop Tamizha Adhi</span><span>Andrea Jeremiah</span><span>Vignesh Shivan</span><span>Jason Sanjay</span>
-      <span aria-hidden="true">Karthi</span><span aria-hidden="true">Soori</span><span aria-hidden="true">Hip Hop Tamizha Adhi</span><span aria-hidden="true">Andrea Jeremiah</span><span aria-hidden="true">Vignesh Shivan</span><span aria-hidden="true">Jason Sanjay</span>
-    </div>
-  </div>
+  <div class="marquee"><div class="marquee-track" id="stars-a">
+    <span>Ilaiyaraaja</span><span>A. R. Rahman</span><span>Thalapathy Vijay</span><span>Yash</span><span>Yuvan Shankar Raja</span><span>Anirudh</span><span>Samantha Ruth Prabhu</span><span>Nayanthara</span><span>Santhosh Narayanan</span><span>Nani</span><span>Karthi</span>
+  </div></div>
+  <div class="marquee marquee-rev outline"><div class="marquee-track" id="stars-b">
+    <span>Soori</span><span>Hip Hop Tamizha Adhi</span><span>Andrea Jeremiah</span><span>Chinmayi</span><span>Abhyankkar</span><span>Arivu</span><span>Pradeep Ranganathan</span><span>Vignesh Shivan</span><span>A. R. Murugadoss</span><span>Jason Sanjay</span><span>Priyanshi Yadav</span>
+  </div></div>
 
   <div class="wrap">
     <dl class="stats">
-      <div class="stat" data-reveal><dt>Likes on one reel</dt><dd><b data-count="3.2" data-suffix="L+">3.2L+</b><span>LIK pre-release event</span></dd></div>
-      <div class="stat" data-reveal><dt>Likes, recent collabs</dt><dd><b data-count="5.5" data-suffix="L+">5.5L+</b><span>Across 12 recent posts</span></dd></div>
-      <div class="stat" data-reveal><dt>Concerts &amp; film events</dt><dd><b data-count="12" data-suffix="+">12+</b><span>Live music, launches, press meets</span></dd></div>
+      <div class="stat" data-reveal><dt>Most liked post</dt><dd><b id="st-top" data-count="3.2" data-suffix="L+">3.2L+</b><span id="st-top-l">Likes on one reel</span></dd></div>
+      <div class="stat" data-reveal><dt>Total likes</dt><dd><b id="st-total" data-count="5.5" data-suffix="L+">5.5L+</b><span id="st-total-l">Likes on Instagram</span></dd></div>
+      <div class="stat" data-reveal><dt>Events covered</dt><dd><b id="st-events" data-count="12" data-suffix="+">12+</b><span>Shoots &amp; events covered</span></dd></div>
       <div class="stat" data-reveal><dt>Roles on one booking</dt><dd><b>3-in-1</b><span>Photo · video · content</span></dd></div>
     </dl>
   </div>
 </section>
 
-<!-- ───────────── Work ───────────── -->
+<!-- ───────────── 01 Selected work (Behance) ───────────── -->
 <section class="section work" id="work">
   <div class="wrap section-head">
     <div>
@@ -144,29 +140,46 @@
   <div class="wrap projects" id="projects"></div>
 </section>
 
-<!-- ───────────── Reels ───────────── -->
-<section class="section reels" id="reels">
+<!-- ───────────── 02 Latest (auto from Instagram) ───────────── -->
+<section class="section reels" id="latest">
   <div class="wrap section-head">
     <div>
-      <p class="eyebrow">02 · Reels &amp; film events</p>
-      <h2 data-reveal>Made for<br><em>the feed</em></h2>
+      <p class="eyebrow"><span class="live-dot"></span>02 · Latest from Instagram</p>
+      <h2 data-reveal>Fresh off<br><em>the feed</em></h2>
     </div>
     <div class="reels-side" data-reveal>
-      <p class="lead">Audio launches, press meets and pre-release events: shot, cut and posted for reach. Tap a card to watch it here.</p>
-      <div class="rail-ctrl">
-        <button class="round-btn" id="rail-prev" aria-label="Scroll reels left"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
-        <button class="round-btn" id="rail-next" aria-label="Scroll reels right"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+      <p class="lead">New shoots land here automatically as soon as Akash posts them. Tap a reel to watch it, or a post to see every frame.</p>
+      <div class="rail-ctrl" data-rail="rail-latest">
+        <button class="round-btn" data-dir="-1" aria-label="Scroll left"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button class="round-btn" data-dir="1" aria-label="Scroll right"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
     </div>
   </div>
-  <div class="rail" id="rail" tabindex="0" aria-label="Reels and posts"></div>
+  <div class="rail" id="rail-latest" tabindex="0" aria-label="Latest posts"></div>
+  <p class="wrap synced" id="synced"></p>
 </section>
 
-<!-- ───────────── Services ───────────── -->
+<!-- ───────────── 03 Archive (auto from Instagram) ───────────── -->
+<section class="section archive" id="archive">
+  <div class="wrap section-head">
+    <div>
+      <p class="eyebrow">03 · The archive</p>
+      <h2 data-reveal>Every <em>shoot</em></h2>
+    </div>
+    <p class="lead" data-reveal>Concerts, film events, portraits and campus nights, all pulled from Akash’s Instagram and kept up to date.</p>
+  </div>
+  <div class="wrap">
+    <div class="filters" id="filters" role="tablist" aria-label="Filter by category"></div>
+    <div class="grid" id="grid"></div>
+    <div class="more-row"><button class="btn btn-ghost" id="grid-more" hidden>Show more</button></div>
+  </div>
+</section>
+
+<!-- ───────────── 04 Services ───────────── -->
 <section class="section services" id="services">
   <div class="wrap section-head">
     <div>
-      <p class="eyebrow">03 · Services</p>
+      <p class="eyebrow">04 · Services</p>
       <h2 data-reveal>Photo. Video.<br><em>Content.</em></h2>
     </div>
     <p class="lead" data-reveal>Book stills, video, content or all three. Everything is planned around the moments your audience will share.</p>
@@ -183,7 +196,7 @@
         <li>Audio launches, press meets &amp; success meets</li>
         <li>College fests &amp; cultural events</li>
         <li>Weddings &amp; private functions</li>
-        <li>Portrait sessions</li>
+        <li>Portrait &amp; artist shoots</li>
       </ul>
     </article>
     <article class="svc" data-reveal>
@@ -194,7 +207,7 @@
       <ul>
         <li>Event films &amp; highlight cuts</li>
         <li>Vertical reels for artists &amp; brands</li>
-        <li>Behind-the-scenes coverage</li>
+        <li>Personal videographer for talent</li>
         <li>Drone shots with partner pilots</li>
       </ul>
     </article>
@@ -202,14 +215,14 @@
       <span class="svc-num">03</span>
       <span class="svc-ico"><svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 9.5l4 2.5-4 2.5z"/></svg></span>
       <h3>Content &amp; marketing</h3>
-      <p>Reels, carousels and promos built to travel on Instagram.</p>
+      <p>Reels, carousels and promos built to travel on Instagram, from an actor who knows the feed.</p>
       <ul>
         <li>Reels &amp; carousels built for reach</li>
+        <li>Brand promo videos</li>
         <li>Artist &amp; fan-page collab posts</li>
-        <li>Event promos, teasers &amp; BTS</li>
         <li>Captions, hashtags &amp; posting plan</li>
       </ul>
-      <p class="proof"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>3.2 lakh likes on a single reel</p>
+      <p class="proof"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span id="proof-text">3.2 lakh likes on a single reel</span></p>
     </article>
   </div>
 
@@ -221,7 +234,7 @@
   </ol>
 </section>
 
-<!-- ───────────── About ───────────── -->
+<!-- ───────────── 05 About ───────────── -->
 <section class="section about" id="about">
   <div class="wrap about-grid">
     <div class="portrait" data-reveal>
@@ -233,10 +246,10 @@
     </div>
 
     <div class="about-copy">
-      <p class="eyebrow">04 · About</p>
+      <p class="eyebrow">05 · About</p>
       <h2 data-reveal>Hi, I’m <em>Akash.</em></h2>
-      <p data-reveal>I’m a photographer, videographer and content creator from Chennai, and I shoot where it’s loud: concerts, audio launches, press meets and college fests. From Ilaiyaraaja’s “Truly Live” to Thalapathy Vijay at the Sathyabama family wedding, I wait for the split second when the light, the crowd and the artist line up.</p>
-      <p data-reveal>Then I turn those frames into content people share. One of my reels crossed 3.2 lakh likes. I’m studying at Chennai Institute of Technology (class of ’28) and take freelance bookings across Tamil Nadu.</p>
+      <p data-reveal>I’m a photographer, videographer and content creator from Chennai, and I shoot where it’s loud: concerts, audio launches, press meets and college fests. From Ilaiyaraaja and Hip Hop Tamizha’s homecoming to Thalapathy Vijay and the Toxic pre-release at Nehru Stadium, I wait for the split second when the light, the crowd and the artist line up.</p>
+      <p data-reveal>It all started on the college stage at Takshashila 2K25. Today I freelance for teams like Behindwoods and The Papster South, and I’m still studying at Chennai Institute of Technology (class of ’28). I’m on the other side of the lens too: I act in reels and I made my debut short film, <em>Ignored.</em></p>
       <blockquote class="quote" data-reveal>
         <p>“Some events you attend. Some events you experience. And some… you get to capture.”</p>
         <cite>Akash, on Instagram</cite>
@@ -245,9 +258,17 @@
         <div><dt>Based in</dt><dd>Chennai, Tamil Nadu</dd></div>
         <div><dt>Studying</dt><dd>CIT · Class of ’28</dd></div>
         <div><dt>Shoots</dt><dd>Photo · Video · Reels</dd></div>
-        <div><dt>Edits in</dt><dd>Adobe Photoshop</dd></div>
+        <div><dt>Also</dt><dd>Actor &amp; short-film maker</dd></div>
       </dl>
     </div>
+  </div>
+
+  <div class="wrap teams" data-reveal>
+    <p class="eyebrow">Shot for &amp; with</p>
+    <ul>
+      <li>Behindwoods</li><li>The Papster South</li><li>Hip Hop Tamizha</li><li>Sunvo Production</li><li>Mix n Match Production</li>
+      <li>Flantz Media</li><li>Celebtree</li><li>Book Asap</li><li>CIT Media Team</li><li>Diya’s Jewels</li>
+    </ul>
   </div>
 
   <div class="wrap bts">
@@ -256,44 +277,55 @@
   </div>
 </section>
 
-<!-- ───────────── Credits ───────────── -->
+<!-- ───────────── 06 Creator (auto from Instagram) ───────────── -->
+<section class="section creator" id="creator">
+  <div class="wrap section-head">
+    <div>
+      <p class="eyebrow">06 · In front of the lens</p>
+      <h2 data-reveal>Actor &amp; <em>creator</em></h2>
+    </div>
+    <div class="reels-side" data-reveal>
+      <p class="lead">Comedy and drama reels, a debut short film, a movie promo song and mime under G Mime Studio. That’s why his content work knows what the feed wants.</p>
+      <div class="rail-ctrl" data-rail="rail-creator">
+        <button class="round-btn" data-dir="-1" aria-label="Scroll left"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button class="round-btn" data-dir="1" aria-label="Scroll right"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="rail" id="rail-creator" tabindex="0" aria-label="Creator reels"></div>
+</section>
+
+<!-- ───────────── 07 Credits (auto) ───────────── -->
 <section class="section credits" id="credits">
   <div class="wrap section-head">
     <div>
-      <p class="eyebrow">05 · Credits</p>
+      <p class="eyebrow">07 · Credits</p>
       <h2 data-reveal>Roll the <em>credits</em></h2>
     </div>
-    <p class="lead" data-reveal>Concerts, film events and fests I’ve shot or filmed, most recent first.</p>
+    <p class="lead" data-reveal>Concerts, film events and fests Akash has shot or filmed, most recent first. New events are added from Instagram automatically.</p>
   </div>
-  <ul class="wrap credit-list">
-    <li data-reveal><span class="c-ev">Meesaya Murukku 2 · Success meet</span><span class="c-role">Videography, with Hip Hop Tamizha Adhi</span><span class="c-where">Benz Park</span></li>
-    <li data-reveal><span class="c-ev">Paradise · Press meet</span><span class="c-role">Photography, with Nani</span><span class="c-where">Taj Coromandel, Chennai</span></li>
-    <li data-reveal><span class="c-ev">SIGMA · Pre-launch</span><span class="c-role">Photo &amp; video, Jason Sanjay’s first stage</span><span class="c-where">Mahendra College, Salem</span></li>
-    <li data-reveal><span class="c-ev">Mandaadi · Audio launch</span><span class="c-role">Photo &amp; video, with Soori</span><span class="c-where">Chennai Trade Centre</span></li>
-    <li data-reveal><span class="c-ev">Sardar 2 · Audio launch</span><span class="c-role">Photo &amp; reel, with Karthi</span><span class="c-where">Film event</span></li>
-    <li data-reveal><span class="c-ev">“Hi” · Success meet</span><span class="c-role">Photography, host VJ Bharane</span><span class="c-where">Film event</span></li>
-    <li data-reveal><span class="c-ev">LIK · Pre-release event</span><span class="c-role">Reel, Nayanthara &amp; Vignesh Shivan</span><span class="c-where">Film event</span></li>
-    <li data-reveal><span class="c-ev">Andrea Jeremiah · Live</span><span class="c-role">Videography</span><span class="c-where">Chennai</span></li>
-    <li data-reveal><span class="c-ev">Chinmayi · Live in concert</span><span class="c-role">Event photography &amp; reel</span><span class="c-where">VGP Golden Beach, Chennai</span></li>
-    <li data-reveal><span class="c-ev">Yuvan Shankar Raja · Live</span><span class="c-role">Event photography, Sathyabama wedding</span><span class="c-where">Chennai</span></li>
-    <li data-reveal><span class="c-ev">Ilaiyaraaja · “Truly Live”</span><span class="c-role">Concert photography</span><span class="c-where">Chennai</span></li>
-    <li data-reveal><span class="c-ev">Takshashila 2025 · Main event</span><span class="c-role">Event photography</span><span class="c-where">CIT, Chennai</span></li>
-    <li data-reveal><span class="c-ev">Recharge 2024 · HHT concert</span><span class="c-role">Concert photography</span><span class="c-where">REC, Chennai</span></li>
+  <ul class="wrap credit-list" id="credit-list">
+    <li><span class="c-ev">Meesaya Murukku 2 · Success meet</span><span class="c-role">Videography</span><span class="c-where">Benz Park · 2026</span></li>
+    <li><span class="c-ev">Paradise · Press meet</span><span class="c-role">Photography</span><span class="c-where">Taj Coromandel, Chennai · 2026</span></li>
+    <li><span class="c-ev">Toxic · Pre-release event</span><span class="c-role">Reel</span><span class="c-where">Nehru Stadium, Chennai · 2026</span></li>
+    <li><span class="c-ev">Ilaiyaraaja · “Truly Live”</span><span class="c-role">Concert photography</span><span class="c-where">Chennai</span></li>
+    <li><span class="c-ev">Recharge 2024 · HHT concert</span><span class="c-role">Concert photography</span><span class="c-where">REC, Chennai · 2024</span></li>
   </ul>
+  <div class="wrap more-row"><button class="btn btn-ghost" id="credits-more" hidden>Show all credits</button></div>
 </section>
 
-<!-- ───────────── Contact ───────────── -->
+<!-- ───────────── 08 Contact ───────────── -->
 <section class="section contact" id="contact">
   <div class="wrap contact-grid">
     <div class="contact-copy">
-      <p class="eyebrow">06 · Book a shoot</p>
+      <p class="eyebrow">08 · Book a shoot</p>
       <h2 data-reveal>Let’s shoot something <em>loud.</em></h2>
-      <p class="contact-lead" data-reveal>Concerts, launches, weddings or brand content. Send a brief and Akash will get back to you on Instagram.</p>
+      <p class="contact-lead" data-reveal>Concerts, launches, weddings or brand content. Fill in the brief and send it straight to Akash’s WhatsApp, or reach him directly.</p>
       <ul class="contact-links" data-reveal>
+        <li><a id="wa-link" href="https://wa.me/918939331561" target="_blank" rel="noopener"><span>WhatsApp</span><b>+91 89393 31561</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a></li>
+        <li><a href="mailto:ashthetics.jpg@gmail.com"><span>Email</span><b class="lower">ashthetics.jpg@gmail.com</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a></li>
         <li><a href="https://www.instagram.com/akshthetics.jpg/" target="_blank" rel="noopener"><span>Instagram</span><b>@akshthetics.jpg</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a></li>
         <li><a href="https://www.behance.net/gallery/232862661/Akash-M-Portfolio" target="_blank" rel="noopener"><span>Behance</span><b>Akash M Portfolio</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a></li>
-        <li><a href="https://www.threads.com/@akshthetics.jpg" target="_blank" rel="noopener"><span>Threads</span><b>@akshthetics.jpg</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a></li>
-        <li class="cfg-email" hidden><a id="email-link" href="#"><span>Email</span><b id="email-text"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a></li>
       </ul>
     </div>
 
@@ -338,13 +370,17 @@
         <textarea id="f-msg" name="msg" rows="3" placeholder="Artists, timings, deliverables…"></textarea>
       </div>
       <div class="brief-actions">
-        <button class="btn btn-orange" type="submit" data-via="instagram">
+        <button class="btn btn-wa" type="submit" data-via="whatsapp">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+          Send to Akash on WhatsApp</button>
+        <button class="btn btn-ghost" type="submit" data-via="instagram">
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6"/></svg>
-          Copy brief &amp; DM on Instagram</button>
-        <button class="btn btn-ghost cfg-wa" type="submit" data-via="whatsapp" hidden>Send on WhatsApp</button>
-        <button class="btn btn-ghost cfg-email" type="submit" data-via="email" hidden>Send by email</button>
+          Copy &amp; DM on Instagram</button>
+        <button class="btn btn-ghost" type="submit" data-via="email">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          Email it</button>
       </div>
-      <p class="brief-note">Your brief is copied to your clipboard. Just paste it into the DM.</p>
+      <p class="brief-note">WhatsApp opens with your brief already typed to Akash; just hit send. The Instagram option copies the brief so you can paste it into the DM.</p>
     </form>
   </div>
 </section>
@@ -362,11 +398,20 @@
   </div>
 </footer>
 
+<!-- Floating WhatsApp -->
+<a class="wa-fab" id="wa-fab" href="https://wa.me/918939331561" target="_blank" rel="noopener" aria-label="Chat with Akash on WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+</a>
+
 <!-- ───────────── Lightbox ───────────── -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lb-title" hidden>
   <div class="lb-top">
     <p><span id="lb-title"></span><span class="lb-count" id="lb-count"></span></p>
-    <button class="round-btn" id="lb-close" aria-label="Close gallery"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="lb-actions">
+      <a class="lb-ig" id="lb-ig" href="#" target="_blank" rel="noopener" hidden>View on Instagram
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+      <button class="round-btn" id="lb-close" aria-label="Close gallery"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
   </div>
   <div class="lb-stage">
     <button class="round-btn lb-nav prev" id="lb-prev" aria-label="Previous photo"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>

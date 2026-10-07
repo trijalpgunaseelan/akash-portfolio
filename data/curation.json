@@ -1,0 +1,579 @@
+{
+ "_readme": "Hand-written overrides for Instagram posts, keyed by post code (instagram.com/p/<code>/). Any field here beats the automatic guess in instagram.json. category: concert | film | celebrity | portrait | campus | brand | creator | personal (personal = hidden). date/year override when the post went up long after the event (year null hides it). event groups posts into one row on the credits list; null keeps a post off the credits. featured = shown first. extraCredits: credits that aren't on Instagram (from the Behance deck); date only sorts them, year is shown.",
+ "stars": [
+  "Ilaiyaraaja",
+  "A. R. Rahman",
+  "Thalapathy Vijay",
+  "Yash",
+  "Yuvan Shankar Raja",
+  "Anirudh",
+  "Samantha Ruth Prabhu",
+  "Nayanthara",
+  "Santhosh Narayanan",
+  "Nani",
+  "Karthi",
+  "Soori",
+  "Hip Hop Tamizha Adhi",
+  "Andrea Jeremiah",
+  "Chinmayi",
+  "Abhyankkar",
+  "Arivu",
+  "Pradeep Ranganathan",
+  "Vignesh Shivan",
+  "A. R. Murugadoss",
+  "Jason Sanjay",
+  "Priyanshi Yadav"
+ ],
+ "extraCredits": [
+  {
+   "event": "Ilaiyaraaja · “Truly Live”",
+   "role": "Concert photography",
+   "venue": "Chennai",
+   "date": "2025-06-01",
+   "source": "behance"
+  },
+  {
+   "event": "Recharge 2024 · HHT concert",
+   "role": "Concert photography",
+   "venue": "REC, Chennai",
+   "date": "2024-03-22",
+   "year": "2024",
+   "source": "behance"
+  }
+ ],
+ "posts": {
+  "DX5_YI2kS4G": {
+   "category": "celebrity",
+   "title": "Thalapathy Vijay",
+   "who": "Sathyabama family wedding",
+   "role": "Event photography",
+   "event": "Sathyabama family wedding · Yuvan Shankar Raja & Thalapathy Vijay",
+   "venue": "Chennai",
+   "featured": true,
+   "date": "2025-05-01",
+   "year": null
+  },
+  "DW13wzqE5QZ": {
+   "category": "film",
+   "title": "LIK Pre-Release",
+   "who": "Nayanthara & Vignesh Shivan",
+   "role": "Reel",
+   "event": "LIK · Pre-release event",
+   "featured": true,
+   "venue": "Vel Tech, Chennai"
+  },
+  "DW6dnBhE2VM": {
+   "category": "film",
+   "title": "LIK Pre-Release",
+   "who": "Pradeep Ranganathan",
+   "role": "Reel",
+   "event": "LIK · Pre-release event",
+   "venue": "Vel Tech, Chennai"
+  },
+  "DW27gxTkfCO": {
+   "category": "film",
+   "title": "LIK Pre-Release",
+   "who": "Anirudh × Pradeep Ranganathan",
+   "role": "Reel",
+   "event": "LIK · Pre-release event",
+   "venue": "Vel Tech, Chennai"
+  },
+  "Dcf66t-A1zj": {
+   "category": "film",
+   "title": "Toxic Pre-Release",
+   "who": "Yash at Nehru Stadium",
+   "role": "Reel",
+   "event": "Toxic · Pre-release event",
+   "venue": "Nehru Stadium, Chennai",
+   "featured": true
+  },
+  "Dd66trnEl0T": {
+   "category": "film",
+   "title": "Meesaya Murukku 2",
+   "who": "Hip Hop Tamizha Adhi · success meet",
+   "role": "Videography",
+   "event": "Meesaya Murukku 2 · Success meet",
+   "venue": "Benz Park"
+  },
+  "DdjvAEMo7b5": {
+   "category": "film",
+   "title": "Paradise Press Meet",
+   "who": "Nani",
+   "role": "Photography",
+   "event": "Paradise · Press meet",
+   "venue": "Taj Coromandel, Chennai",
+   "featured": true
+  },
+  "DdEmubxowZx": {
+   "category": "film",
+   "title": "SIGMA Pre-Launch",
+   "who": "Jason Sanjay’s first stage",
+   "role": "Photo & video",
+   "event": "SIGMA · Pre-launch",
+   "venue": "Mahendra College, Salem"
+  },
+  "Dcvz6jxI1as": {
+   "category": "film",
+   "title": "Mandaadi Audio Launch",
+   "who": "Soori",
+   "role": "Photo & video",
+   "event": "Mandaadi · Audio launch",
+   "venue": "Chennai Trade Centre"
+  },
+  "Dc-URjlgjcK": {
+   "category": "film",
+   "title": "Mandaadi",
+   "who": "Soori’s transformation",
+   "role": "Reel",
+   "event": "Mandaadi · Audio launch",
+   "venue": "Chennai Trade Centre"
+  },
+  "Dc7sHPUAVJZ": {
+   "category": "film",
+   "title": "Sardar 2 Audio Launch",
+   "who": "Karthi",
+   "role": "Reel",
+   "event": "Sardar 2 · Audio launch"
+  },
+  "Dc1MtrlTqbm": {
+   "category": "film",
+   "title": "Swag of Sardar 2",
+   "who": "Karthi",
+   "role": "Reel",
+   "event": "Sardar 2 · Audio launch"
+  },
+  "DdHKBexOWLy": {
+   "category": "film",
+   "title": "“Hi” Success Meet",
+   "who": "Hosted by VJ Bharane",
+   "role": "Photography",
+   "event": "“Hi” · Success meet"
+  },
+  "DFA5FXKyjpY": {
+   "category": "film",
+   "title": "Kadhaipoma Premiere",
+   "who": "Narendra Prasath & Preetha",
+   "role": "Personal videographer",
+   "event": "Kadhaipoma · Final episode premiere"
+  },
+  "DZA5IunEhaJ": {
+   "category": "concert",
+   "title": "The Maestro",
+   "who": "Ilaiyaraaja",
+   "role": "Photography",
+   "event": "Ilaiyaraaja · Live with Behindwoods",
+   "featured": true,
+   "venue": "Nehru Stadium, Chennai"
+  },
+  "DZEYo3VkeXX": {
+   "category": "concert",
+   "title": "Isaignani",
+   "who": "Ilaiyaraaja",
+   "role": "Photography",
+   "event": "Ilaiyaraaja · Live with Behindwoods",
+   "venue": "Nehru Stadium, Chennai"
+  },
+  "DZcQ3MAP8H2": {
+   "category": "concert",
+   "title": "Ilaiyaraaja Live",
+   "who": "Freelancing with Behindwoods",
+   "role": "Video",
+   "event": "Ilaiyaraaja · Live with Behindwoods",
+   "venue": "Nehru Stadium, Chennai"
+  },
+  "DVrAkuXD-34": {
+   "category": "concert",
+   "title": "HHT Homecoming",
+   "who": "Hip Hop Tamizha, with an Anirudh cameo",
+   "role": "Photography",
+   "event": "Hip Hop Tamizha · Homecoming edition",
+   "featured": true
+  },
+  "DYe0zQVjwN9": {
+   "category": "concert",
+   "title": "Pavazha Malli Launch",
+   "who": "Abhyankkar",
+   "role": "Photography",
+   "event": "Pavazha Malli · Audio launch with Abhyankkar",
+   "venue": "VR Mall, Chennai"
+  },
+  "DXCZSwKj0td": {
+   "category": "concert",
+   "title": "Therukural Arivu",
+   "who": "Arivu · for Sunvo Production",
+   "role": "Photo & video",
+   "event": "Therukural Arivu · Live"
+  },
+  "DV_pKqvDzqZ": {
+   "category": "concert",
+   "title": "Andrea Live",
+   "who": "Andrea Jeremiah",
+   "role": "Videography",
+   "event": "Andrea Jeremiah · Live in concert",
+   "venue": "Chennai"
+  },
+  "DM-yQx_Sh-y": {
+   "category": "concert",
+   "title": "Chinmayi Live",
+   "who": "Samantha Ruth Prabhu in the crowd",
+   "role": "Video & edit",
+   "event": "Chinmayi · Live in concert",
+   "venue": "VGP Golden Beach, Chennai",
+   "featured": true
+  },
+  "DM8BwOdS9xg": {
+   "category": "concert",
+   "title": "Chinmayi Live",
+   "who": "Chinmayi Sripaada",
+   "role": "Video & edit",
+   "event": "Chinmayi · Live in concert",
+   "venue": "VGP Golden Beach, Chennai"
+  },
+  "DVbyoArkq0H": {
+   "category": "concert",
+   "title": "Takshashila ’26",
+   "who": "Santhosh Narayanan",
+   "role": "Photography",
+   "event": "Takshashila ’26 · Santhosh Narayanan live",
+   "venue": "CIT, Chennai",
+   "featured": true
+  },
+  "DHDfSv-SGqq": {
+   "category": "concert",
+   "title": "High On Yuvan",
+   "who": "Yuvan Shankar Raja at Takshashila",
+   "role": "Video",
+   "event": "Takshashila ’25 · High On Yuvan musical night",
+   "venue": "CIT, Chennai"
+  },
+  "DU8M71xklT4": {
+   "category": "concert",
+   "title": "A. R. Rahman Live",
+   "who": "A night in Chennai",
+   "role": "Video",
+   "event": null
+  },
+  "DNvlnBaZNQy": {
+   "category": "concert",
+   "title": "Manasi Live",
+   "who": "Singer Manasi",
+   "role": "Video & edit",
+   "event": "Manasi · Live"
+  },
+  "DWwIgtrkpn7": {
+   "category": "portrait",
+   "title": "Priyanshi Yadav",
+   "who": "For The Papster South",
+   "role": "Photography",
+   "event": "Priyanshi Yadav · Shoot for The Papster South"
+  },
+  "DdgjcGFAXUF": {
+   "category": "portrait",
+   "title": "Chennai’s Softer Hours",
+   "who": "Portraits of Devabhadra",
+   "role": "Portraits",
+   "venue": "Kathipara Urban Square, Chennai",
+   "event": null
+  },
+  "Dcq_hwmArBF": {
+   "category": "campus",
+   "title": "CIT Onam",
+   "who": "Saanve Megghana",
+   "role": "Reel",
+   "event": "CIT Onam · with Saanve Megghana",
+   "venue": "CIT, Chennai"
+  },
+  "DOkePi3EQWu": {
+   "category": "campus",
+   "title": "A. R. Murugadoss at CIT",
+   "who": "Anandham meetup",
+   "role": "Video & edit",
+   "event": "A. R. Murugadoss · Anandham meetup",
+   "venue": "CIT, Chennai"
+  },
+  "DRfKRlOkpbz": {
+   "category": "campus",
+   "title": "From the College Stage",
+   "who": "Where the videography started",
+   "role": "Showreel",
+   "event": null
+  },
+  "DHBjaI6SUam": {
+   "category": "campus",
+   "title": "Takshashila ’25",
+   "who": "CIT media & PR team",
+   "role": "Media team",
+   "event": "Takshashila ’25 · Media team",
+   "venue": "CIT, Chennai"
+  },
+  "DHL7SfISHEK": {
+   "category": "campus",
+   "title": "CIT Sports Day",
+   "who": "Media coverage",
+   "role": "Video",
+   "event": "CIT annual sports day · Media coverage",
+   "venue": "CIT, Chennai"
+  },
+  "DEzrd8ISr8U": {
+   "category": "campus",
+   "title": "Saarang 2K25",
+   "who": "IIT Madras, for Immerse CIT",
+   "role": "Video",
+   "event": "Saarang ’25 · IIT Madras",
+   "venue": "IIT Madras"
+  },
+  "DGAZ8NtSbcJ": {
+   "category": "campus",
+   "title": "Beauty of CIT",
+   "who": "Campus film",
+   "role": "Video",
+   "venue": "CIT, Chennai",
+   "event": null
+  },
+  "DFDkOtMyeJw": {
+   "category": "brand",
+   "title": "Diya’s Gen Z Jewels",
+   "who": "Promo video for @diyaaa.jewels",
+   "role": "Promo video",
+   "event": "Diya Jewels · Brand promo"
+  },
+  "DLm9tATyWb-": {
+   "category": "creator",
+   "title": "Ignored.",
+   "who": "Debut short film · International Toilet Festival 3.0",
+   "role": "Short film",
+   "featured": true
+  },
+  "DEp8pMos12i": {
+   "category": "creator",
+   "title": "Thirumanikam",
+   "who": "Acted in the movie’s promo song",
+   "role": "Actor"
+  },
+  "DKtTHYLxNsj": {
+   "category": "creator",
+   "title": "Model Shoot",
+   "who": "Tamil Fashion Saga",
+   "role": "Model"
+  },
+  "DTb8JB9EQ0H": {
+   "category": "creator",
+   "title": "Banaras",
+   "who": "Ganga ghats, Raanjhanaa vibes",
+   "role": "Creator"
+  },
+  "DRJI2_Cku1q": {
+   "category": "creator",
+   "title": "Guru’s Grace",
+   "who": "For Mime Gopi",
+   "role": "Creator"
+  },
+  "DHHDf7kyVGh": {
+   "category": "creator",
+   "title": "Dragon Recreation",
+   "who": "Recreated with VFX",
+   "role": "Actor"
+  },
+  "DT8mZ1Akz1K": {
+   "category": "creator",
+   "title": "We Fall, We Rise",
+   "who": "Not AI, real video",
+   "role": "Creator"
+  },
+  "DO8udsiEmWC": {
+   "category": "creator",
+   "title": "Degrees & Dreams",
+   "who": "Chasing dreams on the weekend",
+   "role": "Creator & edit"
+  },
+  "DQEkNiKEbTS": {
+   "category": "creator",
+   "title": "Snakes & Ladders",
+   "who": "A mongoose joins the game",
+   "role": "Actor"
+  },
+  "DTfmv95kpoo": {
+   "category": "creator",
+   "title": "Eppadi Patta Varigal",
+   "who": "Lyrics by Dhanush K Raja",
+   "role": "Creator"
+  },
+  "DKRIRXSSsfK": {
+   "category": "creator",
+   "title": "Why Her?",
+   "who": "A new style of content",
+   "role": "Actor & edit"
+  },
+  "DFVD9tSSbae": {
+   "category": "creator",
+   "title": "Nth Rejection",
+   "who": "With The Sunniyans",
+   "role": "Edit"
+  },
+  "DGVb5r1Mrel": {
+   "category": "creator",
+   "title": "Poitu Pozhapha Paarunga",
+   "who": "With Prajesh",
+   "role": "Actor"
+  },
+  "DEfgxDuskIL": {
+   "category": "creator",
+   "title": "Viva Voce",
+   "who": "Concept by Akash",
+   "role": "Concept"
+  },
+  "Dax7WcfyRu6": {
+   "category": "creator"
+  },
+  "DXo0XlXjPJ5": {
+   "category": "creator",
+   "title": "Believe Yourself",
+   "who": "Behind the camera"
+  },
+  "DWoAROhEdpQ": {
+   "category": "creator"
+  },
+  "DcFysXYxeIp": {
+   "category": "creator"
+  },
+  "DQUPHr-jGh9": {
+   "category": "creator",
+   "title": "Ellam Mela Irukuravan",
+   "who": "Leave it to the one above"
+  },
+  "DPWNux7AIg0": {
+   "category": "creator",
+   "title": "What’s On Your Mind",
+   "who": "Inspired by @bykxng"
+  },
+  "DNA3xBAsO9d": {
+   "category": "creator"
+  },
+  "DM1clJTIiXe": {
+   "category": "creator"
+  },
+  "DMpRwZcROBS": {
+   "category": "creator"
+  },
+  "DL1dztQS76T": {
+   "category": "creator"
+  },
+  "DLxJIAxSPkv": {
+   "category": "creator"
+  },
+  "DKuJ-5RsWkE": {
+   "category": "creator"
+  },
+  "DKALxqaSWC0": {
+   "category": "creator"
+  },
+  "DJyU4CCy3AW": {
+   "category": "creator"
+  },
+  "DJeozOlyR3_": {
+   "category": "creator"
+  },
+  "DI_3io4xSu0": {
+   "category": "creator"
+  },
+  "DIh_2TnyT-v": {
+   "category": "creator",
+   "title": "Ethir Paaramale",
+   "who": "Rain at CIT"
+  },
+  "DIEw44ySFzO": {
+   "category": "creator"
+  },
+  "DH_fEOyPob5": {
+   "category": "creator",
+   "title": "Red Flag Boy",
+   "who": "An RCB fan reel"
+  },
+  "DHyeQJ9yAis": {
+   "category": "creator",
+   "title": "Code Word Accepted",
+   "who": "Ugadi special, filmed by his mom"
+  },
+  "DHiRkgfs_MA": {
+   "category": "creator"
+  },
+  "DGa0DaYJS8E": {
+   "category": "creator"
+  },
+  "DGCJxReSEUt": {
+   "category": "creator",
+   "title": "Valentine’s Special",
+   "who": "Comedy reel"
+  },
+  "DFsjDGDyW3A": {
+   "category": "creator",
+   "title": "Thaladharisanam",
+   "who": "For Vidaamuyarchi"
+  },
+  "DFKxsRLMlBS": {
+   "category": "creator"
+  },
+  "DEuD73IStem": {
+   "category": "creator",
+   "title": "The Look",
+   "who": "Comedy reel"
+  },
+  "DEktihgsPAo": {
+   "category": "creator"
+  },
+  "DEcc5ceMBIk": {
+   "category": "creator"
+  },
+  "DEPyWocsUaY": {
+   "category": "creator"
+  },
+  "DDhmqzaSXyk": {
+   "category": "creator"
+  },
+  "DV8pawNkTRQ": {
+   "category": "personal"
+  },
+  "DT6CFLAE29y": {
+   "category": "personal"
+  },
+  "DQXHnAbktZ1": {
+   "category": "personal"
+  },
+  "DMKwkxayVPT": {
+   "category": "personal"
+  },
+  "DKfAEPGyeEH": {
+   "category": "personal"
+  },
+  "DKBq8gOyzkz": {
+   "category": "personal"
+  },
+  "DJeutNlyiEr": {
+   "category": "personal"
+  },
+  "DHbWtAwqAOK": {
+   "category": "personal"
+  },
+  "DFlB_IMSVu1": {
+   "category": "personal"
+  },
+  "DFDH3dlSepE": {
+   "category": "personal"
+  },
+  "DDUWZFVMCrm": {
+   "category": "personal"
+  },
+  "DDMsVArsHty": {
+   "category": "personal"
+  },
+  "DDHqQxTyqT0": {
+   "category": "personal"
+  },
+  "DC0jxR4ShYE": {
+   "category": "personal"
+  },
+  "DCwcRWESBiQ": {
+   "category": "personal"
+  }
+ }
+}

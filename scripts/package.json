@@ -1,0 +1,13 @@
+{
+  "name": "akash-portfolio-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Keeps the portfolio in sync with Akash's public Instagram",
+  "scripts": {
+    "sync": "node sync-instagram.mjs",
+    "sync:full": "node sync-instagram.mjs --refresh-all"
+  },
+  "dependencies": {
+    "sharp": "^0.34.0"
+  }
+}
