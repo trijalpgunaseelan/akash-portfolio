@@ -20,13 +20,41 @@
  *
  *   AKASH_WHATSAPP   optional recipient, default 918939331561
  *
- * Responses: 200 {ok:true} | 400 invalid | 429 too-many | 503 not-configured | 502 gateway.
- * Anything but 200 makes the page fall back to opening WhatsApp with the brief typed out.
+ * Responses: 200 {ok:true} | 400 invalid | 403 forbidden (not from the site) | 413/415 bad request
+ *            | 429 too-many | 503 not-configured | 502 gateway.
+ * The page also emails every brief, so a failure here never loses an enquiry.
  */
 const LIMITS = { name: 80, phone: 20, type: 60, city: 120, need: 120, msg: 600 };
+const MAX_BODY = 8 * 1024;
 const WINDOW_MS = 10 * 60 * 1000;
-const PER_WINDOW = 3;
-const recent = new Map(); // ip → timestamps (best effort, per warm instance)
+const PER_IP = 3;                       // briefs per visitor per 10 minutes
+const PER_PHONE_DAY = 3;                // briefs per WhatsApp number per day
+const PER_HOUR_TOTAL = 30;              // ceiling for everything this instance sends in an hour
+const recent = new Map();               // key → timestamps (best effort, per warm instance)
+const hit = (key, windowMs, max) => {
+  const now = Date.now();
+  const list = (recent.get(key) || []).filter((t) => now - t < windowMs);
+  if (list.length >= max) return false;
+  list.push(now);
+  recent.set(key, list);
+  return true;
+};
+
+/* Only the portfolio itself may call this endpoint: its production domain,
+ * this deployment's own URLs, preview deployments of this project, and
+ * localhost during development. Extra domains: SITE_ORIGINS=a.com,b.com */
+const OWN_PREVIEW = /^akash-portfolio-[a-z0-9]+-trijal-p-gs-projects\.vercel\.app$/;
+function allowedOrigin(origin) {
+  let u;
+  try { u = new URL(origin); } catch { return false; }
+  const own = [
+    'akash-portfolio-tau-seven.vercel.app',
+    process.env.VERCEL_PROJECT_PRODUCTION_URL, process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL,
+    ...String(process.env.SITE_ORIGINS || '').split(','),
+  ].filter(Boolean).map((h) => h.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '').toLowerCase());
+  if (u.protocol === 'https:' && (own.includes(u.hostname) || OWN_PREVIEW.test(u.hostname))) return true;
+  return process.env.VERCEL_ENV !== 'production' && ['localhost', '127.0.0.1'].includes(u.hostname);
+}
 
 const oneLine = (v, max) => String(v ?? '').replace(/[\u0000-\u001f\u007f]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
 const prettyDate = (iso) => {
@@ -106,19 +134,26 @@ async function viaCallMeBot(b) {
 }
 
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Cache-Control', 'no-store');
-  if (req.method === 'OPTIONS') return res.status(204).end();
-  if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'post-only' });
+  // No CORS headers: browsers on other websites can't call this endpoint.
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ ok: false, error: 'post-only' });
+  }
+  if (!allowedOrigin(req.headers.origin || '')) return res.status(403).json({ ok: false, error: 'forbidden' });
+  const site = req.headers['sec-fetch-site'];
+  if (site && site !== 'same-origin') return res.status(403).json({ ok: false, error: 'forbidden' });
+  if (!/^application\/json\b/i.test(req.headers['content-type'] || '')) return res.status(415).json({ ok: false, error: 'json-only' });
+  if (Number(req.headers['content-length'] || 0) > MAX_BODY) return res.status(413).json({ ok: false, error: 'too-large' });
 
   const cloudReady = process.env.WHATSAPP_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID;
   if (!cloudReady && !process.env.CALLMEBOT_APIKEY) return res.status(503).json({ ok: false, error: 'not-configured' });
 
   let b = req.body;
   if (typeof b === 'string') { try { b = JSON.parse(b); } catch { b = null; } }
-  if (!b || typeof b !== 'object') return res.status(400).json({ ok: false, error: 'invalid' });
+  if (!b || typeof b !== 'object' || Array.isArray(b) || JSON.stringify(b).length > MAX_BODY) {
+    return res.status(400).json({ ok: false, error: 'invalid' });
+  }
 
   // Bots fill the hidden "website" field or submit instantly: say ok, send nothing.
   const started = Number(b.startedAt);
@@ -130,12 +165,10 @@ module.exports = async (req, res) => {
   if (phone.length === 11 && phone.startsWith('0')) phone = `91${phone.slice(1)}`;
   if (!name || phone.length < 10 || phone.length > 15) return res.status(400).json({ ok: false, error: 'invalid' });
 
-  const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
-  const now = Date.now();
-  const hits = (recent.get(ip) || []).filter((t) => now - t < WINDOW_MS);
-  if (hits.length >= PER_WINDOW) return res.status(429).json({ ok: false, error: 'too-many' });
-  hits.push(now);
-  recent.set(ip, hits);
+  const ip = String(req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
+  if (!hit(`ip:${ip}`, WINDOW_MS, PER_IP) || !hit(`phone:${phone}`, 864e5, PER_PHONE_DAY) || !hit('all', 3600e3, PER_HOUR_TOTAL)) {
+    return res.status(429).json({ ok: false, error: 'too-many' });
+  }
 
   const brief = {
     name,

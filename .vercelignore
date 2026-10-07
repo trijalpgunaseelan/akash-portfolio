@@ -1,0 +1,8 @@
+# Only the website and its API are deployed; tooling and docs stay in the repo.
+README.md
+SECURITY.md
+docs/
+scripts/
+.github/
+node_modules/
+*.log

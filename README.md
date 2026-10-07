@@ -102,6 +102,11 @@ Built automatically from the same Instagram data. A post counts as client work w
 Client names come from those accounts. `data/curation.json → clients` holds the not-a-client list and nice
 display names. Per post, `"client": true/false` and `"clients": [...]` override the guess.
 
+## Security
+
+See [SECURITY.md](SECURITY.md) for how the site is locked down (strict security headers, origin-locked
+API with rate limits, self-hosted fonts, hardened GitHub Actions) and how to report a problem privately.
+
 ## Before publishing
 
 1. **Show Akash and get his OK.** The photos are his work ("no use without explicit permission" on Behance).

@@ -134,6 +134,10 @@
   const pad = (n) => String(n).padStart(2, '0');
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Instagram data is treated as untrusted: post codes and image paths must
+  // match these exact shapes before they're used in URLs or markup.
+  const CODE_RE = /^[A-Za-z0-9_-]{5,40}$/;
+  const IMG_RE = /^assets\/img\/ig\/[A-Za-z0-9_-]{5,40}\/\d{1,3}(-t)?\.webp$/;
   const ICON = {
     arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
     expand: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
@@ -251,7 +255,7 @@
     lastFocus = document.activeElement;
     lbSet = set; lbI = at;
     lbThumbs.innerHTML = set.items.map((it, k) =>
-      `<button type="button" data-k="${k}" aria-label="Photo ${k + 1}"><img src="${it.thumb}" alt="" loading="lazy"></button>`).join('');
+      `<button type="button" data-k="${k}" aria-label="Photo ${k + 1}"><img src="${esc(it.thumb)}" alt="" loading="lazy"></button>`).join('');
     lbThumbs.hidden = set.items.length < 2;
     $('#lb-prev').hidden = $('#lb-next').hidden = set.items.length < 2;
     lbIg.hidden = !set.link;
@@ -327,6 +331,7 @@
   const ig = $('#ig-modal');
   const igFrame = $('#ig-frame');
   const igOpen = (code) => {
+    if (!CODE_RE.test(code || '')) return;
     lastFocus = document.activeElement;
     igFrame.src = `https://www.instagram.com/p/${code}/embed/`;
     $('#ig-open').href = `https://www.instagram.com/p/${code}/`;
@@ -398,8 +403,8 @@
     </span>`;
 
   const reelCard = (p) => `
-    <button type="button" class="reel" data-post="${p.code}" aria-label="${esc(p.title)}: ${esc(p.who || '')}${p.type === 'reel' ? ', watch reel' : ', open photos'}">
-      <img src="${p.media[0].thumb}" alt="" loading="lazy" decoding="async">
+    <button type="button" class="reel" data-post="${esc(p.code)}" aria-label="${esc(p.title)}: ${esc(p.who || '')}${p.type === 'reel' ? ', watch reel' : ', open photos'}">
+      <img src="${esc(p.media[0].thumb)}" alt="" loading="lazy" decoding="async">
       ${badgeRow(p)}
       <span class="r-play${p.type === 'reel' ? '' : ' cam'}">${p.type === 'reel' ? ICON.play : ICON.cam}</span>
       <span class="r-body">
@@ -416,8 +421,8 @@
     </a>`;
 
   const gridCard = (p, sub) => `
-    <button type="button" class="tile" data-post="${p.code}" aria-label="${esc(p.title)}${p.who ? `: ${esc(p.who)}` : ''}">
-      <img src="${p.media[0].thumb}" alt="" loading="lazy" decoding="async">
+    <button type="button" class="tile" data-post="${esc(p.code)}" aria-label="${esc(p.title)}${p.who ? `: ${esc(p.who)}` : ''}">
+      <img src="${esc(p.media[0].thumb)}" alt="" loading="lazy" decoding="async">
       ${badgeRow(p)}
       ${p.type === 'reel' ? `<span class="t-play">${ICON.play}</span>` : ''}
       <span class="t-body">
@@ -484,7 +489,8 @@
     const curPosts = cur.posts || {};
     POSTS = (data.posts || [])
       .map((p) => ({ ...p, ...(p.auto || {}), ...(curPosts[p.code] || {}) }))
-      .filter((p) => p.category && p.category !== 'personal' && !p.hide && p.media?.length)
+      .map((p) => ({ ...p, media: (p.media || []).filter((m) => IMG_RE.test(m.src) && IMG_RE.test(m.thumb)) }))
+      .filter((p) => CODE_RE.test(p.code) && p.category && p.category !== 'personal' && !p.hide && p.media.length)
       .sort((a, b) => b.takenAt.localeCompare(a.takenAt));
     POSTS.forEach((p) => byCode.set(p.code, p));
     const work = POSTS.filter((p) => WORK.includes(p.category));

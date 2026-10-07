@@ -40,6 +40,12 @@ const log = (...a) => console.log(...a);
 
 class Blocked extends Error {}
 
+// Everything read from Instagram is untrusted input.
+const CODE_RE = /^[A-Za-z0-9_-]{5,40}$/;                 // post codes become folder names
+const IMAGE_HOST_RE = /(^|\.)(cdninstagram\.com|fbcdn\.net)$/i; // images only from Instagram's CDN
+const MAX_IMAGE_BYTES = 30 * 1024 * 1024;
+const validCode = (c) => typeof c === 'string' && CODE_RE.test(c);
+
 /* ── HTTP with a tiny cookie jar ─────────────────────────────────────── */
 const jar = new Map();
 const keepCookies = (res) => {
@@ -287,6 +293,7 @@ async function syncViaEmbed(db, known, statsDue) {
   log(`Embed mode: profile embed lists the ${media.length} newest posts.`);
   let added = 0;
   for (const sm of media) {
+    if (!validCode(sm.shortcode)) continue;
     const { record, sources } = fromEmbed(sm);
     const old = known.get(record.code);
     if (old) {
@@ -328,7 +335,7 @@ async function syncViaEmbed(db, known, statsDue) {
         log(`  ? ${code} looks deleted; will remove if it's still gone next time`);
       } else if (Date.now() - Date.parse(p.missingSince) >= REMOVE_AFTER_MS) {
         known.delete(code);
-        await rm(path.join(ROOT, IMG_DIR, code), { recursive: true, force: true });
+        if (validCode(code)) await rm(path.join(ROOT, IMG_DIR, code), { recursive: true, force: true });
         removed.push(code);
         log(`  - ${code} removed (deleted on Instagram)`);
       }
@@ -349,6 +356,7 @@ function mediaSources(m) {
 }
 
 async function saveImages(code, sources) {
+  if (!validCode(code)) throw new Error(`bad post code ${JSON.stringify(code)}`);
   const dir = path.join(ROOT, IMG_DIR, code);
   await mkdir(dir, { recursive: true });
   const out = [];
@@ -360,7 +368,12 @@ async function saveImages(code, sources) {
     if (existsSync(path.join(ROOT, full)) && existsSync(path.join(ROOT, thumb))) {
       ({ width: w, height: h } = await sharp(path.join(ROOT, full)).metadata());
     } else {
-      const buf = Buffer.from(await (await http(s.url, { kind: 'image' })).arrayBuffer());
+      const u = new URL(s.url);
+      if (u.protocol !== 'https:' || !IMAGE_HOST_RE.test(u.hostname)) throw new Error(`refusing image host ${u.hostname}`);
+      const res = await http(s.url, { kind: 'image' });
+      if (!/^image\//i.test(res.headers.get('content-type') || '')) throw new Error('not an image');
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (buf.length > MAX_IMAGE_BYTES) throw new Error('image too large');
       const img = sharp(buf).rotate();
       const info = await img.clone()
         .resize({ width: 1280, height: 1600, fit: 'inside', withoutEnlargement: true })
@@ -441,7 +454,7 @@ function toRecord(m, node, media) {
 async function syncViaProfile(known, statsDue) {
   if (process.env.IG_FORCE_EMBED) throw new Blocked('IG_FORCE_EMBED is set');
   const prof = await loadProfile();
-  const nodes = await listAllPosts(prof);
+  const nodes = (await listAllPosts(prof)).filter((n) => validCode(n.code));
   log(`Profile lists ${nodes.length} posts (${known.size} already in data).`);
 
   // Posts that disappeared from Instagram are removed from the site too, but only
@@ -451,7 +464,7 @@ async function syncViaProfile(known, statsDue) {
   const removed = complete ? [...known.keys()].filter((c) => !listed.has(c)) : [];
   for (const code of removed) {
     known.delete(code);
-    await rm(path.join(ROOT, IMG_DIR, code), { recursive: true, force: true });
+    if (validCode(code)) await rm(path.join(ROOT, IMG_DIR, code), { recursive: true, force: true });
     log(`  removed ${code} (deleted on Instagram)`);
   }
 
@@ -481,6 +494,7 @@ async function syncViaProfile(known, statsDue) {
 /* ── Main ────────────────────────────────────────────────────────────── */
 async function main() {
   if (PROBE) {
+    if (!PROBE.length || !PROBE.every(validCode)) throw new Error('--probe takes comma-separated post codes');
     for (const code of PROBE) log(`${code}: ${JSON.stringify(await postStatus(code))}`);
     return;
   }
