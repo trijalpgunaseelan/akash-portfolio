@@ -8,6 +8,6 @@
     "sync:full": "node sync-instagram.mjs --refresh-all"
   },
   "dependencies": {
-    "sharp": "^0.34.0"
+    "sharp": "^0.35.5"
   }
 }
