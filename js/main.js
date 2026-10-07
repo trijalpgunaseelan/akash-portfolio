@@ -7,6 +7,8 @@
     instagram: 'akshthetics.jpg',
     email: 'ashthetics.jpg@gmail.com',
     whatsapp: '918939331561', // digits only, with country code
+    // serverless function that delivers the brief to Akash's WhatsApp (api/send-brief.js)
+    briefEndpoint: '/api/send-brief',
   };
   const waLink = (text) => `https://wa.me/${CONTACT.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 
@@ -572,17 +574,28 @@
   };
   const go = (url) => { const w = window.open(url, '_blank', 'noopener'); if (!w) location.href = url; };
 
+  const startedAt = Date.now();
+  const sendBtn = $('.btn-send', form);
+  const done = $('#brief-done');
+  const phoneDigits = (v) => {
+    let d = String(v || '').replace(/\D/g, '');
+    if (d.length === 10) d = `91${d}`;
+    if (d.length === 11 && d.startsWith('0')) d = `91${d.slice(1)}`;
+    return d;
+  };
+  const flag = (el, bad) => { el.classList.toggle('invalid', bad); if (bad) el.focus(); return bad; };
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const via = e.submitter?.dataset.via || 'send';
     const d = new FormData(form);
     const name = (d.get('name') || '').trim();
-    const nameEl = $('#f-name');
-    if (!name) {
-      nameEl.classList.add('invalid'); nameEl.focus();
-      toast('Add your name so Akash knows who’s asking.');
-      return;
-    }
-    nameEl.classList.remove('invalid');
+    const phone = phoneDigits(d.get('phone'));
+    if (flag($('#f-name'), !name)) return toast('Add your name so Akash knows who’s asking.');
+    // the phone is only required when the site sends for you (Akash needs it to reply)
+    const phoneBad = via === 'send' ? phone.length < 10 || phone.length > 15 : !!d.get('phone') && phone.length < 10;
+    if (flag($('#f-phone'), phoneBad)) return toast('Add your WhatsApp number so Akash can reply.');
+
     const date = d.get('date')
       ? new Date(d.get('date') + 'T00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
       : 'TBC';
@@ -590,6 +603,7 @@
       'Hi Akash! I’d like to book you for a shoot.',
       '',
       `Name: ${name}`,
+      ...(phone ? [`WhatsApp: +${phone}`] : []),
       `Event: ${d.get('type')}`,
       `Date: ${date}`,
       `Venue / city: ${(d.get('city') || '').trim() || 'TBC'}`,
@@ -599,17 +613,59 @@
     if (msg) lines.push(`Details: ${msg}`);
     const brief = lines.join('\n');
 
-    const via = e.submitter?.dataset.via || 'whatsapp';
     if (via === 'whatsapp') {
       go(waLink(brief));
-      toast('Opening WhatsApp with your brief. Just press send.');
-    } else if (via === 'email') {
+      return toast('Opening WhatsApp with your brief. Just press send.');
+    }
+    if (via === 'email') {
       location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('Shoot enquiry: ' + d.get('type'))}&body=${encodeURIComponent(brief)}`;
-    } else {
+      return;
+    }
+    if (via === 'instagram') {
       const ok = await copy(brief);
       toast(ok ? 'Brief copied. Paste it into the Instagram DM.' : 'Opening Instagram. Copy your brief from the form.');
-      go(`https://ig.me/m/${CONTACT.instagram}`);
+      return go(`https://ig.me/m/${CONTACT.instagram}`);
     }
+
+    // one-click send: the server delivers it to Akash's WhatsApp
+    sendBtn.disabled = true;
+    sendBtn.classList.add('sending');
+    $('.send-label', sendBtn).textContent = 'Sending…';
+    let result = { ok: false, error: 'network' };
+    try {
+      const r = await fetch(CONTACT.briefEndpoint, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          name, phone, type: d.get('type'), date: d.get('date') || '', city: (d.get('city') || '').trim(),
+          need: d.getAll('need'), msg, website: d.get('website') || '', startedAt,
+        }),
+      });
+      result = await r.json().catch(() => ({ ok: false, error: `http-${r.status}` }));
+    } catch (_) { /* offline or blocked */ }
+    sendBtn.disabled = false;
+    sendBtn.classList.remove('sending');
+    $('.send-label', sendBtn).textContent = 'Send to Akash';
+
+    if (result.ok) {
+      const shown = phone.length === 12 && phone.startsWith('91') ? `+91 ${phone.slice(2, 7)} ${phone.slice(7)}` : `+${phone}`;
+      $('#done-text').textContent = `Your brief is on its way to Akash’s WhatsApp. He’ll reply to ${shown} soon.`;
+      form.hidden = true;
+      done.hidden = false;
+      done.focus();
+      return;
+    }
+    if (result.error === 'too-many') return toast('You’ve sent a few briefs already. Akash will get back to you soon.');
+    if (result.error === 'invalid') return toast('Check your name and WhatsApp number, then try again.');
+    // couldn't deliver automatically: hand the visitor a ready-to-send WhatsApp instead
+    toast('Couldn’t send it automatically, so WhatsApp is opening with your brief. Just press send.');
+    go(waLink(brief));
+  });
+  $('#brief-again').addEventListener('click', () => {
+    form.reset();
+    done.hidden = true;
+    form.hidden = false;
+    $('#f-name').focus();
   });
 
   // floating WhatsApp: shows after the hero, hides at the contact section

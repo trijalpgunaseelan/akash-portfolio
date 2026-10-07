@@ -872,3 +872,34 @@ svg .fill { fill: currentColor; stroke: none; }
   .wa-fab { right: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); width: 54px; height: 54px; }
 }
 .t-body .r-role { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── One-click brief → WhatsApp ─────────────────────────────────────── */
+.brief-wrap { min-width: 0; }
+.brief[hidden], .brief-done[hidden] { display: none; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.btn-send { width: 100%; height: 58px; font-size: 16px; margin-top: 4px; }
+.btn-send svg { width: 21px; height: 21px; }
+.btn-send:hover svg { transform: none; }
+.btn-send:disabled { cursor: progress; opacity: .85; transform: none; }
+.btn-send.sending svg { display: none; }
+.btn-send.sending::before {
+  content: ""; width: 18px; height: 18px; border-radius: 50%;
+  border: 2.5px solid rgba(5, 46, 22, .3); border-top-color: #052e16;
+  animation: spin .8s linear infinite;
+}
+.brief-alt { font-size: 13px; color: var(--muted); }
+.brief-alt button {
+  font: 600 13px var(--f-body); color: var(--text); padding: 2px 0;
+  border-bottom: 1px solid var(--line-2); transition: color .2s, border-color .2s;
+}
+.brief-alt button:hover { color: var(--orange); border-color: var(--orange); }
+.brief-done {
+  background: var(--ink); color: var(--text); border-radius: 22px;
+  padding: clamp(32px, 4vw, 48px); display: grid; justify-items: start; gap: 14px;
+  box-shadow: 0 50px 90px -50px rgba(60, 20, 0, .9); outline: none;
+  animation: fade .4s ease;
+}
+.done-ico { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: #25d366; color: #052e16; }
+.done-ico svg { width: 32px; height: 32px; stroke-width: 2.6; }
+.brief-done h3 { font: 400 44px/1 var(--f-display); text-transform: uppercase; margin-top: 6px; }
+.brief-done p { color: #d3cec5; font-size: 17px; max-width: 36ch; margin-bottom: 8px; }

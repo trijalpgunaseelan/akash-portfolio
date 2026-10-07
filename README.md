@@ -67,11 +67,28 @@ New posts get an automatic category and title. To polish one, add it to **`data/
 If Instagram ever blocks the sync, the workflow fails (GitHub emails the repo owner) and the site
 keeps showing the last good data.
 
-## Contact
+## Contact & the one-click brief
 
-Set at the top of `js/main.js` (`CONTACT`) and in the contact section of `index.html`:
-WhatsApp **+91 89393 31561**, email **ashthetics.jpg@gmail.com**, Instagram @akshthetics.jpg.
-"Send to Akash on WhatsApp" opens WhatsApp with the brief already typed to his number; the visitor taps Send.
+Contact details: WhatsApp **+91 89393 31561**, email **ashthetics.jpg@gmail.com**, Instagram @akshthetics.jpg
+(`CONTACT` in `js/main.js` and the contact section of `index.html`).
+
+The shoot-brief form has one button: **Send to Akash**. The visitor presses it, and
+`api/send-brief.js` (a Vercel serverless function) delivers the brief to Akash's WhatsApp through
+[CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/), a free gateway that sends
+WhatsApp messages to your own number. The message includes the visitor's number and a one-tap reply link.
+
+**One-time setup:**
+
+1. On Akash's phone (+91 89393 31561), save CallMeBot's number from
+   [callmebot.com](https://www.callmebot.com/blog/free-api-whatsapp-messages/) and send it on WhatsApp:
+   `I allow callmebot to send me messages`. It replies with an **API key**.
+2. Vercel → project **akash-portfolio** → Settings → Environment Variables → add
+   `CALLMEBOT_APIKEY` = that key (Production) → redeploy.
+
+Until the key is set, or if CallMeBot is ever down, the button falls back to opening WhatsApp with the
+brief typed out, so no enquiry is lost. Spam guards: a hidden honeypot field, a minimum fill time,
+input limits, and 3 briefs per 10 minutes per visitor. "Open WhatsApp", "Copy & DM on Instagram" and
+"Email" remain as small alternative links.
 
 ## Before publishing
 

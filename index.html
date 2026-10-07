@@ -320,7 +320,7 @@
     <div class="contact-copy">
       <p class="eyebrow">08 · Book a shoot</p>
       <h2 data-reveal>Let’s shoot something <em>loud.</em></h2>
-      <p class="contact-lead" data-reveal>Concerts, launches, weddings or brand content. Fill in the brief and send it straight to Akash’s WhatsApp, or reach him directly.</p>
+      <p class="contact-lead" data-reveal>Concerts, launches, weddings or brand content. Fill in the brief and press send. It lands straight in Akash’s WhatsApp.</p>
       <ul class="contact-links" data-reveal>
         <li><a id="wa-link" href="https://wa.me/918939331561" target="_blank" rel="noopener"><span>WhatsApp</span><b>+91 89393 31561</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a></li>
         <li><a href="mailto:ashthetics.jpg@gmail.com"><span>Email</span><b class="lower">ashthetics.jpg@gmail.com</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a></li>
@@ -329,11 +329,18 @@
       </ul>
     </div>
 
-    <form class="brief" id="brief" data-reveal novalidate>
+    <div class="brief-wrap" data-reveal>
+    <form class="brief" id="brief" novalidate>
       <h3>Shoot brief</h3>
-      <div class="field">
-        <label for="f-name">Your name</label>
-        <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Name / brand / college" required>
+      <div class="field-row">
+        <div class="field">
+          <label for="f-name">Your name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Name / brand / college" maxlength="80" required>
+        </div>
+        <div class="field">
+          <label for="f-phone">Your WhatsApp number</label>
+          <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+91 98765 43210" maxlength="20" required>
+        </div>
       </div>
       <div class="field-row">
         <div class="field">
@@ -355,7 +362,7 @@
       </div>
       <div class="field">
         <label for="f-city">Venue / city</label>
-        <input id="f-city" name="city" type="text" placeholder="e.g. Chennai Trade Centre">
+        <input id="f-city" name="city" type="text" placeholder="e.g. Chennai Trade Centre" maxlength="120">
       </div>
       <fieldset class="field">
         <legend>What do you need?</legend>
@@ -367,21 +374,25 @@
       </fieldset>
       <div class="field">
         <label for="f-msg">Anything else</label>
-        <textarea id="f-msg" name="msg" rows="3" placeholder="Artists, timings, deliverables…"></textarea>
+        <textarea id="f-msg" name="msg" rows="3" placeholder="Artists, timings, deliverables…" maxlength="1000"></textarea>
       </div>
-      <div class="brief-actions">
-        <button class="btn btn-wa" type="submit" data-via="whatsapp">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
-          Send to Akash on WhatsApp</button>
-        <button class="btn btn-ghost" type="submit" data-via="instagram">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".6"/></svg>
-          Copy &amp; DM on Instagram</button>
-        <button class="btn btn-ghost" type="submit" data-via="email">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-          Email it</button>
-      </div>
-      <p class="brief-note">WhatsApp opens with your brief already typed to Akash; just hit send. The Instagram option copies the brief so you can paste it into the DM.</p>
+      <div class="hp" aria-hidden="true"><label>Website <input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+      <button class="btn btn-wa btn-send" type="submit" data-via="send">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+        <span class="send-label">Send to Akash</span></button>
+      <p class="brief-note">Your brief goes straight to Akash’s WhatsApp. No app or login needed. He’ll reply on the number you give.</p>
+      <p class="brief-alt">Prefer another way?
+        <button type="submit" data-via="whatsapp">Open WhatsApp</button> ·
+        <button type="submit" data-via="instagram">Copy &amp; DM on Instagram</button> ·
+        <button type="submit" data-via="email">Email</button></p>
     </form>
+    <div class="brief-done" id="brief-done" hidden tabindex="-1">
+      <span class="done-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <h3>Sent to Akash</h3>
+      <p id="done-text">Your brief is on its way to Akash’s WhatsApp. He’ll reply to you there.</p>
+      <button class="btn btn-ghost" type="button" id="brief-again">Send another brief</button>
+    </div>
+    </div>
   </div>
 </section>
 </main>
