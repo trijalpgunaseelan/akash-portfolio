@@ -15,6 +15,8 @@
 import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import https from 'node:https';
+import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
@@ -56,6 +58,12 @@ const KIND_HEADERS = {
     accept: 'image/avif,image/webp,image/*,*/*;q=0.8', 'sec-fetch-dest': 'image',
     'sec-fetch-mode': 'no-cors', 'sec-fetch-site': 'cross-site', referer: 'https://www.instagram.com/',
   },
+  // what a browser sends when another website shows an Instagram embed in an iframe
+  embed: {
+    accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'sec-fetch-dest': 'iframe', 'sec-fetch-mode': 'navigate', 'sec-fetch-site': 'cross-site',
+    referer: 'https://trijalpgunaseelan.github.io/',
+  },
 };
 async function http(url, { kind = 'document', method = 'GET', body, headers = {}, tries = 4 } = {}) {
   for (let t = 1; t <= tries; t++) {
@@ -82,6 +90,41 @@ async function http(url, { kind = 'document', method = 'GET', body, headers = {}
     const text = await res.text().catch(() => '');
     if (res.status === 401 || res.status === 403) throw new Blocked(`${res.status} at ${url}: ${text.slice(0, 160)}`);
     throw new Error(`${res.status} at ${url}: ${text.slice(0, 160)}`);
+  }
+  throw new Blocked(`gave up on ${url} after ${tries} tries`);
+}
+
+/* fetch() forces "sec-fetch-mode: cors", and Instagram only fills its embed
+ * widget for real iframe navigations, so embeds go through plain https. */
+function rawGet(url, headers, redirects = 4) {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, { headers: { ...headers, 'accept-encoding': 'gzip, deflate' } }, (res) => {
+      if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location && redirects) {
+        res.resume();
+        resolve(rawGet(new URL(res.headers.location, url).href, headers, redirects - 1));
+        return;
+      }
+      const enc = res.headers['content-encoding'];
+      const body = enc === 'gzip' ? res.pipe(zlib.createGunzip()) : enc === 'deflate' ? res.pipe(zlib.createInflate()) : res;
+      const chunks = [];
+      body.on('data', (c) => chunks.push(c));
+      body.on('end', () => resolve({ status: res.statusCode, url, text: Buffer.concat(chunks).toString('utf8') }));
+      body.on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(30000, () => req.destroy(new Error(`timeout at ${url}`)));
+  });
+}
+async function embedGet(url, tries = 3) {
+  const headers = {
+    'user-agent': UA, 'accept-language': 'en-US,en;q=0.9', ...KIND_HEADERS.embed,
+  };
+  for (let t = 1; t <= tries; t++) {
+    const res = await rawGet(url, headers).catch((e) => ({ status: 0, error: e }));
+    if (res.url && /\/accounts\/login|\/challenge\//.test(res.url)) throw new Blocked(`login wall at ${url}`);
+    if (res.status === 200) return res.text;
+    if (res.status === 401 || res.status === 403) throw new Blocked(`${res.status} at ${url}`);
+    await sleep(4000 * t);
   }
   throw new Blocked(`gave up on ${url} after ${tries} tries`);
 }
@@ -168,6 +211,89 @@ async function loadPost(code) {
   const media = jsonBlobs(html).flatMap((b) => findAll(b, (o) => o.code === code && 'taken_at' in o))[0];
   if (!media) throw new Blocked(`post ${code} had no media data`);
   return media;
+}
+
+/* ── Embed fallback ─────────────────────────────────────────────────────
+ * Instagram sends cloud servers (like GitHub Actions) to a login wall, but it
+ * serves its embed widget to everyone. The profile embed carries the 6 newest
+ * posts in full; a post embed shows its current like count. */
+async function loadProfileEmbed() {
+  const html = await embedGet(`https://www.instagram.com/${USERNAME}/embed/`);
+  const raw = html.match(/"contextJSON":"((?:[^"\\]|\\.)*)"/)?.[1];
+  if (!raw) throw new Blocked('profile embed had no data');
+  const ctx = JSON.parse(JSON.parse(`"${raw}"`)).context || {};
+  const media = (ctx.graphql_media || []).map((g) => g.shortcode_media).filter(Boolean);
+  if (!media.length) throw new Blocked('profile embed listed no posts');
+  return {
+    media,
+    profile: { followers: parseCount(ctx.followers_count), posts: parseCount(ctx.posts_count) },
+  };
+}
+
+async function likesFromEmbed(code) {
+  const html = await embedGet(`https://www.instagram.com/p/${code}/embed/captioned/`);
+  const m = html.match(/([\d,]+) likes?\b/);
+  return m ? parseCount(m[1]) : null;
+}
+
+function fromEmbed(sm) {
+  const caption = sm.edge_media_to_caption?.edges?.[0]?.node?.text || '';
+  const type = sm.__typename === 'GraphSidecar' ? 'carousel'
+    : sm.__typename === 'GraphVideo' || sm.is_video || sm.product_type === 'clips' ? 'reel' : 'photo';
+  const items = sm.edge_sidecar_to_children?.edges?.map((e) => e.node) || [sm];
+  const best = (n) => n.display_resources?.at(-1)?.config_width > 1000 ? n.display_resources.at(-1).src : n.display_url;
+  const location = sm.location?.name || null;
+  return {
+    record: {
+      code: sm.shortcode,
+      type,
+      takenAt: new Date(sm.taken_at_timestamp * 1000).toISOString(),
+      caption,
+      likes: sm.like_and_view_counts_disabled ? null : sm.edge_liked_by?.count ?? sm.edge_media_preview_like?.count ?? null,
+      comments: sm.edge_media_to_comment?.count ?? sm.edge_media_preview_comment?.count ?? null,
+      location,
+      coauthors: (sm.coauthor_producers || []).map((u) => u.username).filter((u) => u && u !== USERNAME),
+      tagged: (sm.edge_media_to_tagged_user?.edges || []).map((e) => e.node?.user?.username).filter(Boolean),
+      auto: { category: autoCategory(caption, type), title: autoTitle(caption, location) },
+    },
+    sources: items.map((n) => ({ url: best(n), video: !!n.is_video })).filter((s) => s.url),
+  };
+}
+
+async function syncViaEmbed(db, known, statsDue) {
+  const { media, profile } = await loadProfileEmbed();
+  log(`Embed mode: profile embed lists the ${media.length} newest posts.`);
+  let added = 0;
+  for (const sm of media) {
+    const { record, sources } = fromEmbed(sm);
+    const old = known.get(record.code);
+    if (old) {
+      // fresh numbers for recent posts come with the embed for free
+      known.set(record.code, { ...old, likes: record.likes ?? old.likes, comments: record.comments ?? old.comments });
+      continue;
+    }
+    record.media = await saveImages(record.code, sources);
+    known.set(record.code, record);
+    added++;
+    log(`  + ${record.code} ${record.type} ${record.takenAt.slice(0, 10)} [${record.auto.category}] ${record.auto.title}`);
+  }
+  if (statsDue) {
+    const listed = new Set(media.map((m) => m.shortcode));
+    const recent = [...known.values()].sort((a, b) => b.takenAt.localeCompare(a.takenAt))
+      .filter((p) => !listed.has(p.code)).slice(0, STATS_LATEST);
+    log(`Refreshing likes on ${recent.length} older posts…`);
+    for (const p of recent) {
+      try {
+        const likes = await likesFromEmbed(p.code);
+        if (likes != null) known.set(p.code, { ...p, likes });
+      } catch (e) {
+        if (e instanceof Blocked) throw e;
+        console.warn(`  ! ${p.code}: ${e.message}`);
+      }
+      await sleep(1200);
+    }
+  }
+  return { added, removed: [], profile };
 }
 
 /* ── Turning a media object into our record ──────────────────────────── */
@@ -267,15 +393,10 @@ function toRecord(m, node, media) {
   };
 }
 
-/* ── Main ────────────────────────────────────────────────────────────── */
-async function main() {
-  const db = existsSync(DATA_FILE)
-    ? JSON.parse(await readFile(DATA_FILE, 'utf8'))
-    : { username: USERNAME, profile: {}, statsUpdatedAt: null, posts: [] };
-  const before = JSON.stringify(db.posts) + JSON.stringify(db.profile);
-  const known = new Map(db.posts.map((p) => [p.code, p]));
-
-  log(`Reading @${USERNAME}…`);
+/* Full mode: the profile page + paginated listing + each post page.
+ * Works from home/office connections; also detects deleted posts. */
+async function syncViaProfile(known, statsDue) {
+  if (process.env.IG_FORCE_EMBED) throw new Blocked('IG_FORCE_EMBED is set');
   const prof = await loadProfile();
   const nodes = await listAllPosts(prof);
   log(`Profile lists ${nodes.length} posts (${known.size} already in data).`);
@@ -291,9 +412,7 @@ async function main() {
     log(`  removed ${code} (deleted on Instagram)`);
   }
 
-  const statsDue = REFRESH_ALL || !db.statsUpdatedAt ||
-    Date.now() - Date.parse(db.statsUpdatedAt) > STATS_EVERY_DAYS * 864e5;
-  const newest = [...nodes].slice(0, STATS_LATEST).map((n) => n.code);
+  const newest = nodes.slice(0, STATS_LATEST).map((n) => n.code);
   const toFetch = nodes.filter((n) => !known.has(n.code) || REFRESH_ALL || (statsDue && newest.includes(n.code)));
   log(`Fetching ${toFetch.length} post page(s)…`);
 
@@ -313,9 +432,33 @@ async function main() {
     }
     await sleep(1200);
   }
+  return { added, removed, profile: prof.profile };
+}
+
+/* ── Main ────────────────────────────────────────────────────────────── */
+async function main() {
+  const db = existsSync(DATA_FILE)
+    ? JSON.parse(await readFile(DATA_FILE, 'utf8'))
+    : { username: USERNAME, profile: {}, statsUpdatedAt: null, posts: [] };
+  const before = JSON.stringify(db.posts) + JSON.stringify(db.profile);
+  const known = new Map(db.posts.map((p) => [p.code, p]));
+
+  const statsDue = REFRESH_ALL || !db.statsUpdatedAt ||
+    Date.now() - Date.parse(db.statsUpdatedAt) > STATS_EVERY_DAYS * 864e5;
+
+  log(`Reading @${USERNAME}…`);
+  let result;
+  try {
+    result = await syncViaProfile(known, statsDue);
+  } catch (e) {
+    if (!(e instanceof Blocked)) throw e;
+    log(`Profile page blocked (${e.message}); falling back to the public embed.`);
+    result = await syncViaEmbed(db, known, statsDue);
+  }
+  const { added, removed, profile } = result;
 
   db.username = USERNAME;
-  db.profile = { ...db.profile, ...Object.fromEntries(Object.entries(prof.profile).filter(([, v]) => v != null)) };
+  db.profile = { ...db.profile, ...Object.fromEntries(Object.entries(profile).filter(([, v]) => v != null)) };
   db.posts = [...known.values()].sort((a, b) => b.takenAt.localeCompare(a.takenAt));
   if (statsDue) db.statsUpdatedAt = new Date().toISOString();
 
