@@ -51,7 +51,11 @@
    "venue": "Chennai",
    "featured": true,
    "date": "2025-05-01",
-   "year": null
+   "year": null,
+   "clients": [
+    "Sathyabama"
+   ],
+   "client": true
   },
   "DW13wzqE5QZ": {
    "category": "film",
@@ -76,7 +80,8 @@
    "who": "Anirudh × Pradeep Ranganathan",
    "role": "Reel",
    "event": "LIK · Pre-release event",
-   "venue": "Vel Tech, Chennai"
+   "venue": "Vel Tech, Chennai",
+   "client": false
   },
   "Dcf66t-A1zj": {
    "category": "film",
@@ -102,7 +107,12 @@
    "role": "Photography",
    "event": "Paradise · Press meet",
    "venue": "Taj Coromandel, Chennai",
-   "featured": true
+   "featured": true,
+   "clients": [
+    "Book Asap",
+    "Ranjith Photography",
+    "Sathish (PRO)"
+   ]
   },
   "DdEmubxowZx": {
    "category": "film",
@@ -154,7 +164,10 @@
    "title": "Kadhaipoma Premiere",
    "who": "Narendra Prasath & Preetha",
    "role": "Personal videographer",
-   "event": "Kadhaipoma · Final episode premiere"
+   "event": "Kadhaipoma · Final episode premiere",
+   "clients": [
+    "Kadhaipoma"
+   ]
   },
   "DZA5IunEhaJ": {
    "category": "concert",
@@ -163,7 +176,10 @@
    "role": "Photography",
    "event": "Ilaiyaraaja · Live with Behindwoods",
    "featured": true,
-   "venue": "Nehru Stadium, Chennai"
+   "venue": "Nehru Stadium, Chennai",
+   "clients": [
+    "Behindwoods"
+   ]
   },
   "DZEYo3VkeXX": {
    "category": "concert",
@@ -171,7 +187,10 @@
    "who": "Ilaiyaraaja",
    "role": "Photography",
    "event": "Ilaiyaraaja · Live with Behindwoods",
-   "venue": "Nehru Stadium, Chennai"
+   "venue": "Nehru Stadium, Chennai",
+   "clients": [
+    "Behindwoods"
+   ]
   },
   "DZcQ3MAP8H2": {
    "category": "concert",
@@ -179,7 +198,10 @@
    "who": "Freelancing with Behindwoods",
    "role": "Video",
    "event": "Ilaiyaraaja · Live with Behindwoods",
-   "venue": "Nehru Stadium, Chennai"
+   "venue": "Nehru Stadium, Chennai",
+   "clients": [
+    "Behindwoods"
+   ]
   },
   "DVrAkuXD-34": {
    "category": "concert",
@@ -187,7 +209,10 @@
    "who": "Hip Hop Tamizha, with an Anirudh cameo",
    "role": "Photography",
    "event": "Hip Hop Tamizha · Homecoming edition",
-   "featured": true
+   "featured": true,
+   "clients": [
+    "Hip Hop Tamizha"
+   ]
   },
   "DYe0zQVjwN9": {
    "category": "concert",
@@ -195,14 +220,21 @@
    "who": "Abhyankkar",
    "role": "Photography",
    "event": "Pavazha Malli · Audio launch with Abhyankkar",
-   "venue": "VR Mall, Chennai"
+   "venue": "VR Mall, Chennai",
+   "clients": [
+    "The Papster South",
+    "Think Indie Collective"
+   ]
   },
   "DXCZSwKj0td": {
    "category": "concert",
    "title": "Therukural Arivu",
    "who": "Arivu · for Sunvo Production",
    "role": "Photo & video",
-   "event": "Therukural Arivu · Live"
+   "event": "Therukural Arivu · Live",
+   "clients": [
+    "Sunvo Production"
+   ]
   },
   "DV_pKqvDzqZ": {
    "category": "concert",
@@ -210,7 +242,12 @@
    "who": "Andrea Jeremiah",
    "role": "Videography",
    "event": "Andrea Jeremiah · Live in concert",
-   "venue": "Chennai"
+   "venue": "Chennai",
+   "clients": [
+    "Mix n Match Production",
+    "Flantz Media",
+    "Celebtree"
+   ]
   },
   "DM-yQx_Sh-y": {
    "category": "concert",
@@ -236,7 +273,11 @@
    "role": "Photography",
    "event": "Takshashila ’26 · Santhosh Narayanan live",
    "venue": "CIT, Chennai",
-   "featured": true
+   "featured": true,
+   "clients": [
+    "Santhosh Narayanan",
+    "CIT Media"
+   ]
   },
   "DHDfSv-SGqq": {
    "category": "concert",
@@ -265,7 +306,11 @@
    "title": "Priyanshi Yadav",
    "who": "For The Papster South",
    "role": "Photography",
-   "event": "Priyanshi Yadav · Shoot for The Papster South"
+   "event": "Priyanshi Yadav · Shoot for The Papster South",
+   "clients": [
+    "Priyanshi Yadav",
+    "The Papster South"
+   ]
   },
   "DdgjcGFAXUF": {
    "category": "portrait",
@@ -289,7 +334,8 @@
    "who": "Anandham meetup",
    "role": "Video & edit",
    "event": "A. R. Murugadoss · Anandham meetup",
-   "venue": "CIT, Chennai"
+   "venue": "CIT, Chennai",
+   "client": false
   },
   "DRfKRlOkpbz": {
    "category": "campus",
@@ -574,6 +620,71 @@
   },
   "DCwcRWESBiQ": {
    "category": "personal"
+  }
+ },
+ "clients": {
+  "_readme": "Client works = work posts (not creator/personal) that are collabs with someone outside 'notClients', or whose caption says the shoot was for someone ('Shot for @…', 'for team @…', 'Team @…', 'freelancing', 'opportunity', 'trusting me', 'personal videographer'). Per post, curation 'client': true/false forces it, and 'clients': [...] sets the names shown.",
+  "notClients": [
+   "akshthetics.jpg",
+   "shutter.frames4k",
+   "akashframe.cuts",
+   "theek_fx",
+   "chandru.artz",
+   "chandru.pxl",
+   "creativesby.jay",
+   "101satyaa",
+   "_pratheek__17",
+   "_pratheek__18",
+   "pratheekk_19",
+   "jaysthetics._",
+   "shreeram_skywalker",
+   "_falconfpv_",
+   "alwaysnanifans",
+   "nani_fan_forever",
+   "samantha_admirer___",
+   "hiphoptamizha_veriyans",
+   "pradeep_ranganathan__fan_page",
+   "pradeep_ranganathan_universe",
+   "pradeepranganathan_fans.club_",
+   "vijay_fans_media",
+   "thalapathy_vijay_fc"
+  ],
+  "names": {
+   "book.asap": "Book Asap",
+   "thepapstersouth": "The Papster South",
+   "theyashstory": "Yash",
+   "devabhadra27": "Devabhadra",
+   "vj_bharane": "VJ Bharane",
+   "ranjithphotography_": "Ranjith Photography",
+   "racreations_studio": "RA Creations",
+   "s2mediaoffl": "S2 Media",
+   "immerse_cit": "Immerse CIT",
+   "lifeat_citchennai": "Life at CIT",
+   "dev.framecult": "Frame Cult",
+   "ritual.3": "Ritual",
+   "diyaaa.jewels": "Diya’s Jewels",
+   "behindwoodsofficial": "Behindwoods",
+   "sunvo.production": "Sunvo Production",
+   "hiphoptamizha": "Hip Hop Tamizha",
+   "musicsanthosh": "Santhosh Narayanan",
+   "mixndmatchproduction": "Mix n Match Production",
+   "flantz_media": "Flantz Media",
+   "celebtree.official": "Celebtree",
+   "therealandreajeremiah": "Andrea Jeremiah",
+   "priyanshiyadavofficial_": "Priyanshi Yadav",
+   "saanve.megghana": "Saanve Megghana",
+   "sathyabama.official": "Sathyabama",
+   "sathyabama.event": "Sathyabama Events",
+   "citchennai_official": "CIT Chennai",
+   "cittakshashila": "Takshashila",
+   "kadhaipoma.official": "Kadhaipoma",
+   "bekay_photography": "Bekay Photography",
+   "ray_thelonewolf": "Ray",
+   "dpk__deepak_": "Deepak",
+   "torqueentertainment": "Torque Entertainment",
+   "thinkindiecollective": "Think Indie Collective",
+   "sathish_pro": "Sathish (PRO)",
+   "proyuvraaj": "Yuvraaj (PRO)"
   }
  }
 }

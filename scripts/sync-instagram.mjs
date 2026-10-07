@@ -252,6 +252,7 @@ function fromEmbed(sm) {
       likes: sm.like_and_view_counts_disabled ? null : sm.edge_liked_by?.count ?? sm.edge_media_preview_like?.count ?? null,
       comments: sm.edge_media_to_comment?.count ?? sm.edge_media_preview_comment?.count ?? null,
       location,
+      owner: sm.owner?.username || USERNAME,
       coauthors: (sm.coauthor_producers || []).map((u) => u.username).filter((u) => u && u !== USERNAME),
       tagged: (sm.edge_media_to_tagged_user?.edges || []).map((e) => e.node?.user?.username).filter(Boolean),
       auto: { category: autoCategory(caption, type), title: autoTitle(caption, location) },
@@ -269,7 +270,7 @@ async function syncViaEmbed(db, known, statsDue) {
     const old = known.get(record.code);
     if (old) {
       // fresh numbers for recent posts come with the embed for free
-      known.set(record.code, { ...old, likes: record.likes ?? old.likes, comments: record.comments ?? old.comments });
+      known.set(record.code, { ...old, likes: record.likes ?? old.likes, comments: record.comments ?? old.comments, owner: old.owner || record.owner });
       continue;
     }
     record.media = await saveImages(record.code, sources);
@@ -386,6 +387,7 @@ function toRecord(m, node, media) {
     likes: m.like_and_view_counts_disabled ? null : m.like_count ?? null,
     comments: m.comment_count ?? null,
     location,
+    owner: m.user?.username || node?.user?.username || USERNAME,
     coauthors: (m.coauthor_producers || []).map((u) => u.username).filter((u) => u && u !== USERNAME),
     tagged: (m.usertags?.in || []).map((t) => t.user?.username).filter(Boolean),
     media,

@@ -15,13 +15,14 @@ Everything else (latest posts, archive, creator reels, stats, credits) is built 
 | Stars in frame | Scrolling names: Ilaiyaraaja, Vijay, Yuvan, Samantha, Nayanthara, Nani, Karthi… |
 | Stats | Most-liked post, total likes, events covered (computed from Instagram) |
 | 01 Selected work | 5 Behance photo projects (49 photos) with a full-screen gallery |
-| 02 Latest | The 10 newest work posts from Instagram, with NEW badges |
-| 03 Archive | Every work post, filterable (concerts, film events, portraits, campus…) |
-| 04 Services | Photography · Videography · Content & marketing, plus a 4-step process |
-| 05 About | Portrait, bio, teams he's shot for, "on the job" photos |
-| 06 Creator | His acting/creator reels, short film *Ignored.*, ranked by likes |
-| 07 Credits | Every event, role and venue, grouped from Instagram + Behance |
-| 08 Contact | WhatsApp, email, Instagram. The brief form sends to his WhatsApp, copies for an Instagram DM, or emails |
+| 02 Client works | Commissioned shoots: collabs with clients and "shot for @…" posts, with client filters |
+| 03 Latest | The 10 newest work posts from Instagram, with NEW badges |
+| 04 Archive | Every work post, filterable (concerts, film events, portraits, campus…) |
+| 05 Services | Photography · Videography · Content & marketing, plus a 4-step process |
+| 06 About | Portrait, bio, teams he's shot for, "on the job" photos |
+| 07 Creator | His acting/creator reels, short film *Ignored.*, ranked by likes |
+| 08 Credits | Every event, role and venue, grouped from Instagram + Behance |
+| 09 Contact | WhatsApp, email, Instagram. One Send button delivers the brief to his WhatsApp and inbox |
 
 Reels play inside the page (Instagram embed); photo posts open every frame in the gallery.
 
@@ -72,19 +73,30 @@ keeps showing the last good data.
 Contact details: WhatsApp **+91 89393 31561**, email **ashthetics.jpg@gmail.com**, Instagram @akshthetics.jpg
 (`CONTACT` in `js/main.js` and the contact section of `index.html`).
 
-The shoot-brief form has one button: **Send to Akash**. The visitor presses it, and
-`api/send-brief.js` (a Vercel serverless function) sends the brief to Akash's WhatsApp through
-**Meta's official WhatsApp Cloud API**. The message includes the visitor's details and a *Reply on WhatsApp* button.
-[CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/) works as a backup sender if `CALLMEBOT_APIKEY` is set.
+The shoot-brief form has one button: **Send to Akash**. The visitor presses it and stays on the page.
+Two free deliveries run together, and the brief counts as sent if either one gets through:
 
-**Setup:** follow **[docs/whatsapp-setup.md](docs/whatsapp-setup.md)**. It covers a Meta app with a free test
-number, a permanent token, and the `shoot_enquiry` template (`scripts/whatsapp-setup.mjs` creates and tests it).
-Vercel needs `WHATSAPP_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID`.
+- **WhatsApp:** `api/send-brief.js` (Vercel function) messages Akash's WhatsApp. It uses
+  [CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/) (free) once `CALLMEBOT_APIKEY` is set in
+  Vercel, or Meta's WhatsApp Cloud API with its free test number (`WHATSAPP_TOKEN` + `WHATSAPP_PHONE_NUMBER_ID`,
+  see [docs/whatsapp-setup.md](docs/whatsapp-setup.md)).
+- **Email:** the page posts the brief to [FormSubmit](https://formsubmit.co) (free), which emails it to
+  **ashthetics.jpg@gmail.com**. The very first brief triggers a one-time **Activate Form** email; click it once.
+  (If the site moves to a new domain, FormSubmit asks for activation again.)
 
-Until that's done, or if delivery ever fails, the button falls back to opening WhatsApp with the
-brief typed out, so no enquiry is lost. Spam guards: a hidden honeypot field, a minimum fill time,
-input limits, and 3 briefs per 10 minutes per visitor. "Open WhatsApp", "Copy & DM on Instagram" and
-"Email" remain as small alternative links.
+If both fail, the visitor sees a short "try again" message. Nobody is redirected to WhatsApp.
+Spam guards: a hidden honeypot field, a minimum fill time, input limits, and 3 briefs per 10 minutes per visitor.
+
+## Client works
+
+Built automatically from the same Instagram data. A post counts as client work when it's a work post
+(not creator/personal) and either:
+- it's a **collab** with an account that isn't Akash's own, his editors or a fan page, or
+- its **caption** says it was commissioned ("Shot for @…", "for team @…", "Team @…", "freelancing",
+  "opportunity", "trusting me", "personal videographer").
+
+Client names come from those accounts. `data/curation.json → clients` holds the not-a-client list and nice
+display names. Per post, `"client": true/false` and `"clients": [...]` override the guess.
 
 ## Before publishing
 

@@ -903,3 +903,18 @@ svg .fill { fill: currentColor; stroke: none; }
 .done-ico svg { width: 32px; height: 32px; stroke-width: 2.6; }
 .brief-done h3 { font: 400 44px/1 var(--f-display); text-transform: uppercase; margin-top: 6px; }
 .brief-done p { color: #d3cec5; font-size: 17px; max-width: 36ch; margin-bottom: 8px; }
+
+/* ── Client works ───────────────────────────────────────────────────── */
+.clients { border-top: 1px solid var(--line); background: linear-gradient(180deg, #0d0d12, var(--bg)); }
+.clients[hidden] { display: none; }
+.client-chips {
+  list-style: none; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+  margin: 0 calc(var(--gutter) * -1) 28px; padding: 2px var(--gutter);
+}
+.client-chips::-webkit-scrollbar { display: none; }
+.client-chips li { flex: none; }
+.brief-error {
+  font-size: 14px; color: #ffb4ab; background: rgba(255, 90, 79, .12);
+  border: 1px solid rgba(255, 90, 79, .35); border-radius: 12px; padding: 12px 14px;
+}
+.brief-error[hidden] { display: none; }

@@ -9,6 +9,8 @@
     whatsapp: '918939331561', // digits only, with country code
     // serverless function that delivers the brief to Akash's WhatsApp (api/send-brief.js)
     briefEndpoint: '/api/send-brief',
+    // free email relay (formsubmit.co): every brief is also emailed to Akash
+    emailRelay: 'https://formsubmit.co/ajax/ashthetics.jpg@gmail.com',
   };
   const waLink = (text) => `https://wa.me/${CONTACT.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 
@@ -167,7 +169,7 @@
       links.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
-  ['work', 'latest', 'archive', 'services', 'about', 'creator', 'credits', 'contact']
+  ['work', 'clients', 'latest', 'archive', 'services', 'about', 'creator', 'credits', 'contact']
     .forEach((id) => { const el = document.getElementById(id); if (el) spy.observe(el); });
 
   const menuBtn = $('#menu-btn');
@@ -413,7 +415,7 @@
       <span>@${CONTACT.instagram} ↗</span>
     </a>`;
 
-  const gridCard = (p) => `
+  const gridCard = (p, sub) => `
     <button type="button" class="tile" data-post="${p.code}" aria-label="${esc(p.title)}${p.who ? `: ${esc(p.who)}` : ''}">
       <img src="${p.media[0].thumb}" alt="" loading="lazy" decoding="async">
       ${badgeRow(p)}
@@ -421,9 +423,62 @@
       <span class="t-body">
         <span class="r-role">${esc([LABEL[p.category], when(p)].filter(Boolean).join(' · '))}</span>
         <span class="t-title">${esc(p.title)}</span>
-        ${p.who || p.venue || p.location ? `<span class="r-who">${esc(p.who || p.venue || p.location)}</span>` : ''}
+        ${sub || p.who || p.venue || p.location ? `<span class="r-who">${esc(sub || p.who || p.venue || p.location)}</span>` : ''}
       </span>
     </button>`;
+
+  /* Client works: collabs with someone who isn't Akash's own account, crew or a
+     fan page, or captions that say the shoot was for someone. */
+  const COMMISSIONED = /\bshot\s+(?:this\s+)?for\b|\bfor\s+team\b|\bteam\s*[:\-]*\s*@|freelanc|opportunity|trusting me|personal videographer/i;
+  const renderClients = (work, cfg) => {
+    const not = new Set((cfg.notClients || []).map((h) => h.toLowerCase()));
+    const names = cfg.names || {};
+    const nameOf = (h) => names[h] || h.replace(/^[._]+|[._]+$/g, '').replace(/[._]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    const fromCaption = (cap) => {
+      const out = [];
+      const re = /(?:shot\s+(?:this\s+)?for|for\s+team|team)\s*[:\-]*\s*((?:@[\w.]+(?:\s*(?:,|&|and|x|×)\s*)?)+)/gi;
+      let m;
+      while ((m = re.exec(cap || ''))) out.push(...(m[1].match(/@[\w.]+/g) || []).map((h) => h.slice(1)));
+      return out;
+    };
+    const list = work.map((p) => {
+      const collab = [p.owner, ...(p.coauthors || [])].filter((h) => h && !not.has(h.toLowerCase()));
+      const isClient = 'client' in p ? p.client : !!p.clients?.length || collab.length > 0 || COMMISSIONED.test(p.caption || '');
+      if (!isClient) return null;
+      const who = p.clients || [...new Set([...collab, ...fromCaption(p.caption)])].filter((h) => !not.has(h.toLowerCase())).map(nameOf);
+      return { ...p, clientNames: who };
+    }).filter(Boolean);
+
+    const section = $('#clients');
+    if (!list.length) { section.hidden = true; return; }
+    const tally = new Map();
+    list.forEach((p) => p.clientNames.forEach((n) => tally.set(n, (tally.get(n) || 0) + 1)));
+    const ranked = [...tally].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const chips = $('#client-chips');
+    chips.innerHTML = [['', 'All clients', list.length], ...ranked.slice(0, 10).map(([n, c]) => [n, n, c])]
+      .map(([key, label, n], i) => `<li><button type="button" class="filter${i ? '' : ' on'}" data-client="${esc(key)}">${esc(label)}<small>${n}</small></button></li>`)
+      .join('');
+
+    const grid = $('#client-grid');
+    const more = $('#client-more');
+    let pick = '', shown = 8;
+    const card = (p) => gridCard(p, p.clientNames.length ? `For ${p.clientNames.slice(0, 2).join(' & ')}` : null);
+    const draw = () => {
+      const items = pick ? list.filter((p) => p.clientNames.includes(pick)) : list;
+      grid.innerHTML = items.slice(0, shown).map(card).join('');
+      more.hidden = items.length <= shown;
+      more.textContent = `Show more (${items.length - shown})`;
+    };
+    chips.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-client]');
+      if (!b) return;
+      pick = b.dataset.client; shown = 8;
+      $$('.filter', chips).forEach((f) => f.classList.toggle('on', f === b));
+      draw();
+    });
+    more.addEventListener('click', () => { shown += 8; draw(); });
+    draw();
+  };
 
   const renderInstagram = (data, cur) => {
     const curPosts = cur.posts || {};
@@ -433,6 +488,7 @@
       .sort((a, b) => b.takenAt.localeCompare(a.takenAt));
     POSTS.forEach((p) => byCode.set(p.code, p));
     const work = POSTS.filter((p) => WORK.includes(p.category));
+    renderClients(work, cur.clients || {});
 
     // 02 · latest work posts
     $('#rail-latest').innerHTML = work.slice(0, 10).map(reelCard).join('') + endCard;
@@ -613,10 +669,6 @@
     if (msg) lines.push(`Details: ${msg}`);
     const brief = lines.join('\n');
 
-    if (via === 'whatsapp') {
-      go(waLink(brief));
-      return toast('Opening WhatsApp with your brief. Just press send.');
-    }
     if (via === 'email') {
       location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('Shoot enquiry: ' + d.get('type'))}&body=${encodeURIComponent(brief)}`;
       return;
@@ -627,39 +679,59 @@
       return go(`https://ig.me/m/${CONTACT.instagram}`);
     }
 
-    // one-click send: the server delivers it to Akash's WhatsApp
+    // one-click send: Akash gets it on WhatsApp (api/send-brief) and by email (FormSubmit).
+    // The visitor never leaves the page.
+    const errorEl = $('#brief-error');
+    errorEl.hidden = true;
+    const showDone = () => {
+      const shown = phone.length === 12 && phone.startsWith('91') ? `+91 ${phone.slice(2, 7)} ${phone.slice(7)}` : `+${phone}`;
+      $('#done-text').textContent = `Akash has your brief. He’ll reply to ${shown} on WhatsApp soon.`;
+      form.hidden = true;
+      done.hidden = false;
+      done.focus();
+    };
+    // bots fill the hidden field or submit instantly: look done, send nothing
+    if (d.get('website') || Date.now() - startedAt < 3000) return showDone();
+
     sendBtn.disabled = true;
     sendBtn.classList.add('sending');
     $('.send-label', sendBtn).textContent = 'Sending…';
-    let result = { ok: false, error: 'network' };
-    try {
-      const r = await fetch(CONTACT.briefEndpoint, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          name, phone, type: d.get('type'), date: d.get('date') || '', city: (d.get('city') || '').trim(),
-          need: d.getAll('need'), msg, website: d.get('website') || '', startedAt,
-        }),
-      });
-      result = await r.json().catch(() => ({ ok: false, error: `http-${r.status}` }));
-    } catch (_) { /* offline or blocked */ }
+    const payload = {
+      name, phone, type: d.get('type'), date: d.get('date') || '', city: (d.get('city') || '').trim(),
+      need: d.getAll('need'), msg, website: d.get('website') || '', startedAt,
+    };
+    const toWhatsApp = fetch(CONTACT.briefEndpoint, {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload),
+    }).then((r) => r.json()).catch(() => ({ ok: false, error: 'network' }));
+    const toEmail = fetch(CONTACT.emailRelay, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify({
+        _subject: `New shoot enquiry: ${name} · ${d.get('type')}`,
+        _template: 'table',
+        _captcha: 'false',
+        Name: name,
+        WhatsApp: `+${phone}`,
+        Event: d.get('type'),
+        Date: date,
+        'Venue / city': payload.city || 'TBC',
+        Need: payload.need.join(', ') || 'Not sure yet',
+        Details: msg || '-',
+        'Reply on WhatsApp': `https://wa.me/${phone}`,
+      }),
+    }).then((r) => r.json()).then((j) => ({ ok: String(j.success) === 'true', error: j.message }))
+      .catch(() => ({ ok: false, error: 'network' }));
+    const [wa, mail] = await Promise.all([toWhatsApp, toEmail]);
+
     sendBtn.disabled = false;
     sendBtn.classList.remove('sending');
     $('.send-label', sendBtn).textContent = 'Send to Akash';
 
-    if (result.ok) {
-      const shown = phone.length === 12 && phone.startsWith('91') ? `+91 ${phone.slice(2, 7)} ${phone.slice(7)}` : `+${phone}`;
-      $('#done-text').textContent = `Your brief is on its way to Akash’s WhatsApp. He’ll reply to ${shown} soon.`;
-      form.hidden = true;
-      done.hidden = false;
-      done.focus();
-      return;
-    }
-    if (result.error === 'too-many') return toast('You’ve sent a few briefs already. Akash will get back to you soon.');
-    if (result.error === 'invalid') return toast('Check your name and WhatsApp number, then try again.');
-    // couldn't deliver automatically: hand the visitor a ready-to-send WhatsApp instead
-    toast('Couldn’t send it automatically, so WhatsApp is opening with your brief. Just press send.');
-    go(waLink(brief));
+    if (wa.ok || mail.ok) return showDone();
+    if (wa.error === 'too-many') return toast('You’ve sent a few briefs already. Akash will get back to you soon.');
+    if (wa.error === 'invalid') return toast('Check your name and WhatsApp number, then try again.');
+    errorEl.textContent = 'Couldn’t send that just now. Please try again in a minute, or DM @akshthetics.jpg on Instagram.';
+    errorEl.hidden = false;
   });
   $('#brief-again').addEventListener('click', () => {
     form.reset();
