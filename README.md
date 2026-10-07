@@ -38,7 +38,7 @@ python3 -m http.server 8000
 
 ## Instagram auto-sync
 
-`.github/workflows/sync-instagram.yml` runs `scripts/sync-instagram.mjs` twice a day (06:00 and 18:00 IST).
+`.github/workflows/sync-instagram.yml` runs `scripts/sync-instagram.mjs` every 3 hours, so a new post shows up on the site within about 3 hours.
 It reads Akash's public profile with no login or token, and then:
 
 - adds new posts: every carousel image is downloaded to `assets/img/ig/<code>/` and the details go into `data/instagram.json`

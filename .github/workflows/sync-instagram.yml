@@ -1,11 +1,12 @@
 # Keeps the portfolio in step with @akshthetics.jpg on Instagram.
-# Runs twice a day (06:00 and 18:00 IST); new posts, likes and deletions are
-# committed straight to main, so any host that deploys from main picks them up.
+# Runs every 3 hours (at :17, off GitHub's busy top-of-the-hour slots, since
+# GitHub sometimes delays or skips scheduled runs). New posts, likes and
+# deletions are committed straight to main; Vercel redeploys from main.
 name: Sync Instagram
 
 on:
   schedule:
-    - cron: "30 0,12 * * *"
+    - cron: "17 */3 * * *"
   workflow_dispatch:
     inputs:
       refresh_all:
