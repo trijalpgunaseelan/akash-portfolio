@@ -110,8 +110,8 @@ API with rate limits, self-hosted fonts, hardened GitHub Actions) and how to rep
 ## Before publishing
 
 1. **Show Akash and get his OK.** The photos are his work ("no use without explicit permission" on Behance).
-2. After deploying, change `og:image` in `index.html` to the full URL
-   (e.g. `https://akash.netlify.app/assets/og.jpg`) so link previews show the share image.
+2. The live address is **https://akshthetics.vercel.app** (`og:image`, `og:url` and `canonical` in
+   `index.html` point there; update them and `allowedOrigin` in `api/send-brief.js` if it ever changes).
 
 ## Deploy (free)
 

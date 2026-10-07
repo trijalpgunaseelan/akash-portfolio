@@ -73,7 +73,7 @@ const KIND_HEADERS = {
   embed: {
     accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'sec-fetch-dest': 'iframe', 'sec-fetch-mode': 'navigate', 'sec-fetch-site': 'cross-site',
-    referer: 'https://trijalpgunaseelan.github.io/',
+    referer: 'https://akshthetics.vercel.app/',
   },
 };
 async function http(url, { kind = 'document', method = 'GET', body, headers = {}, tries = 4 } = {}) {

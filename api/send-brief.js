@@ -48,7 +48,7 @@ function allowedOrigin(origin) {
   let u;
   try { u = new URL(origin); } catch { return false; }
   const own = [
-    'akash-portfolio-tau-seven.vercel.app',
+    'akshthetics.vercel.app', 'akash-portfolio-trijal-p-gs-projects.vercel.app',
     process.env.VERCEL_PROJECT_PRODUCTION_URL, process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL,
     ...String(process.env.SITE_ORIGINS || '').split(','),
   ].filter(Boolean).map((h) => h.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '').toLowerCase());
