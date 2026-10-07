@@ -686,5 +686,9 @@
    "sathish_pro": "Sathish (PRO)",
    "proyuvraaj": "Yuvraaj (PRO)"
   }
+ },
+ "stats": {
+  "_readme": "Headline numbers that Instagram alone can't show. eventsCovered is the minimum shown in the \"Events covered\" stat.",
+  "eventsCovered": 150
  }
 }

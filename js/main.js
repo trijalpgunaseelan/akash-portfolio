@@ -586,7 +586,8 @@
     };
     creditsMore.addEventListener('click', () => { allCredits = true; drawCredits(); });
     drawCredits();
-    setStat('st-events', `${credits.length}+`);
+    // headline figure from curation (stats.eventsCovered); grows only if the credits list ever passes it
+    setStat('st-events', `${Math.max(Number(cur.stats?.eventsCovered) || 0, credits.length)}+`);
 
     // stars marquee (doubled for a seamless loop)
     if (cur.stars?.length) {
