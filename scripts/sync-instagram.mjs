@@ -514,7 +514,16 @@ async function main() {
   } catch (e) {
     if (!(e instanceof Blocked)) throw e;
     log(`Profile page blocked (${e.message}); falling back to the public embed.`);
-    result = await syncViaEmbed(db, known, statsDue);
+    try {
+      result = await syncViaEmbed(db, known, statsDue);
+    } catch (embedErr) {
+      if (!(embedErr instanceof Blocked)) throw embedErr;
+      log(`Embed fallback blocked (${embedErr.message}); leaving data unchanged for this run.`);
+      if (process.env.GITHUB_OUTPUT) {
+        await writeFile(process.env.GITHUB_OUTPUT, 'added=0\nremoved=0\nchanged=false\n', { flag: 'a' });
+      }
+      return;
+    }
   }
   const { added, removed, profile } = result;
 
