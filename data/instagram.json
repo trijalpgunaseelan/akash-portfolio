@@ -1,12 +1,37 @@
 {
  "username": "akshthetics.jpg",
  "profile": {
-  "followers": 2047,
+  "followers": 2051,
   "following": 954,
-  "posts": 91
+  "posts": 92
  },
  "statsUpdatedAt": "2026-10-28T20:20:11.114Z",
  "posts": [
+  {
+   "code": "DfSM3klArBC",
+   "type": "reel",
+   "takenAt": "2026-11-03T15:51:04.000Z",
+   "caption": "Vechi Senjitaley🥰\n\nVisuals🎥:- @vj.crack \nCuts✂️🎞️:- @justt__ek \nAudio:- Senjitaley from @sonymusic_south , @sonymusicindia by @anirudhofficial \nLocation:- knk road\n\n#10yearsofremo #remo #sivakarthikayen #reelsinstagram #contentcreator",
+   "likes": 333,
+   "comments": 29,
+   "location": "KNR",
+   "owner": "akshthetics.jpg",
+   "coauthors": [],
+   "tagged": [],
+   "auto": {
+    "category": "concert",
+    "title": "Vechi Senjitaley"
+   },
+   "media": [
+    {
+     "src": "assets/img/ig/DfSM3klArBC/1.webp",
+     "thumb": "assets/img/ig/DfSM3klArBC/1-t.webp",
+     "w": 901,
+     "h": 1600,
+     "video": true
+    }
+   ]
+  },
   {
    "code": "DeR66m0I-Go",
    "type": "carousel",
@@ -469,7 +494,7 @@
    "type": "reel",
    "takenAt": "2026-08-30T17:08:46.000Z",
    "caption": "When she walked in, the vibe changed. ✨\n@saanve.megghana × @citchennai_official Onam 🌸\n\nShot this for @saanve.megghana & @book.asap \n\n@netflix_in \n@saanve.megghana \n@elan.offl \n@pyaarpremakalyanam.in \n@proyuvraaj \n@lifeat_citchennai @immerse_cit @citchennai_official\n\nEdit:- @101satyaa \n\n#pyaarpremakalyanam #saanvi #saanvimegghana #netflix #reelsinstagram",
-   "likes": 777,
+   "likes": 786,
    "comments": 2,
    "location": "Chennai Institute of Technology",
    "owner": "akshthetics.jpg",
@@ -3484,5 +3509,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-03T06:54:32.523Z"
+ "updatedAt": "2026-11-03T17:06:59.026Z"
 }
